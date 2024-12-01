@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('admin_id')->nullable()->constrained(
+                table: 'users',
+                indexName: 'transactions_admin_id'
+            );
+            $table->foreignId('buyer_id')->constrained(
+                table: 'users',
+                indexName: 'transactions_buyer_id'
+            );
+            $table->foreignId('product_id')->constrained(
+                table: 'products',
+                indexName: 'transactions_product_id'
+            );
+            $table->integer('quantity');
+            $table->enum('status', ['Pending', 'Accepted', 'Denied', 'Failed', 'Finished'])->default('Pending');
             $table->timestamps();
         });
     }
