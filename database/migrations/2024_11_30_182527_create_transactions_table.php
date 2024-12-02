@@ -26,7 +26,7 @@ return new class extends Migration
                 indexName: 'transactions_product_id'
             );
             $table->integer('quantity');
-            $table->enum('status', ['Pending', 'Accepted', 'Denied', 'Failed', 'Finished'])->default('Pending');
+            $table->enum('status', ['Pending', 'Accepted', 'Denied', 'In Process', 'Failed', 'Finished'])->default('Pending');
             $table->timestamps();
         });
     }
