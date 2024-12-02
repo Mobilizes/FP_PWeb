@@ -15,19 +15,12 @@ class TransactionFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {
-        $admin = fake()->randomElement([null, User::factory()->create(['role' => 'admin'])]);
-        $product = $admin ? Product::factory()->create(['price' => 0]) : Product::factory()->create();
-        $buyer = User::factory()->create();
-        $status = $admin ? fake()->randomElement(['Accepted', 'Denied', 'In Process', 'Failed', 'Finished'])
-                         : fake()->randomElement(['In Process', 'Failed', 'Finished']);
-        
+    {   
         return [
-            'admin_id' => $admin->id,
-            'buyer_id' => $buyer->id,
-            'product_id' => $product->id,
+            'buyer_id' => User::factory(),
+            'product_id' => Product::factory(),
             'quantity' => fake()->numberBetween(1, 10),
-            'status' => $status,
+            'status' => fake()->randomElement(['Pending', 'In Process', 'Failed', 'Finished']),
         ];
     }
 }

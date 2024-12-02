@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\User;
 
-class ProductFactory extends Factory
+class FreebieFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,10 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'seller_id' => User::factory(),
+            'donator_id' => User::factory(),
             'description' => fake()->randomElement([fake()->paragraph(), null]),
-            'price' => fake()->numberBetween(0, 10000000),
             'stock' => fake()->numberBetween(0, 100),
+            'limit' => fake()->numberBetween(1, 10),
         ];
     }
 }
