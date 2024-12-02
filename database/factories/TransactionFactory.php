@@ -19,11 +19,8 @@ class TransactionFactory extends Factory
         $admin = fake()->randomElement([null, User::factory()->create(['role' => 'admin'])]);
         $product = $admin ? Product::factory()->create(['price' => 0]) : Product::factory()->create();
         $buyer = User::factory()->create();
-        if ($admin) {
-            $status = fake()->randomElement(['Accepted', 'Denied', 'In Process', 'Failed', 'Finished']);
-        } else {
-            $status = fake()->randomElement(['In Process', 'Failed', 'Finished']);
-        }
+        $status = $admin ? fake()->randomElement(['Accepted', 'Denied', 'In Process', 'Failed', 'Finished'])
+                         : fake()->randomElement(['In Process', 'Failed', 'Finished']);
         
         return [
             'admin_id' => $admin->id,
