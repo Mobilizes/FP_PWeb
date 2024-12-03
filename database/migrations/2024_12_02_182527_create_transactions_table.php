@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buyer_id')->constrained(
-                table: 'users',
-                indexName: 'transactions_buyer_id'
+            $table->foreignId('cart_id')->constrained(
+                table: 'carts',
+                indexName: 'transactions_cart_id'
             );
-            $table->foreignId('product_id')->constrained(
-                table: 'products',
-                indexName: 'transactions_product_id'
-            );
-            $table->integer('quantity');
             $table->enum('status', ['Pending', 'In Process', 'Failed', 'Finished'])->default('Pending');
             $table->timestamps();
         });
@@ -33,5 +28,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('transactions');
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->dropForeign('transactions_cart_id');
+        });
     }
 };

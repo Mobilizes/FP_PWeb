@@ -18,6 +18,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->name(),
             'seller_id' => User::factory(),
+            'image_path' => fake()->imageUrl(),
             'description' => fake()->randomElement([fake()->paragraph(), null]),
             'price' => fake()->numberBetween(0, 10000000),
             'stock' => fake()->numberBetween(0, 100),
