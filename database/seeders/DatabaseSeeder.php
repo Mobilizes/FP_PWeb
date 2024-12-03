@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,7 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory(5)->create();
+
+        // Create 10 products and associate them with existing users
+        Product::factory(10)->create()->each(function ($product) use ($users) {
+            $product->seller_id = $users->random()->id;
+            $product->save();
+        });
+
+        // Create 3 transactions and associate them with existing users and products
+        Transaction::factory(3)->create();
 
         User::factory()->create([
             'name' => 'Test User',
