@@ -16,9 +16,11 @@ class Product extends Model
      */
     protected $fillable = [
         'name',
+        'image_path',
         'price',
         'description',
         'stock',
+        'seller_id',
     ];
 
     public function seller(): BelongsTo
@@ -29,5 +31,10 @@ class Product extends Model
     public function carts(): BelongsToMany
     {
         return $this->belongsToMany(Cart::class);
+    }
+
+    public function image_url(): string
+    {
+        return $this->image_path ? asset('storage/' . $this->image_path) : '';
     }
 }
