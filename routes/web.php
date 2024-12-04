@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Product;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/products', [ProductController::class, 'store']);
+    Route::get('/products/create', function () {
+        $products = Product::where('seller_id', Auth::id())->get();
+
+        return view('products.create', compact('products'));
+    })->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 });
 
 Route::get('/products', [ProductController::class, 'index']);

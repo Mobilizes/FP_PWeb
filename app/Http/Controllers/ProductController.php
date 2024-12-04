@@ -27,7 +27,13 @@ class ProductController extends Controller
             'price' => 'required|integer',
             'description' => 'nullable|string',
             'stock' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $validatedData['image_path'] = $imagePath;
+        }
 
         $validatedData['seller_id'] = Auth::id();
 
