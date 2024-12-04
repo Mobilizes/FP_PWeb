@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('freebies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('seller_id')->constrained(
+            $table->foreignId('donator_id')->constrained(
                 table: 'users',
-                indexName: 'products_seller_id'
+                indexName: 'freebies_donator_id'
             );
             $table->string('name');
-            $table->string('image_path')->nullable();
             $table->text('description')->nullable();
-            $table->integer('price');
             $table->integer('stock');
+            $table->integer('limit')->default(1);
             $table->timestamps();
         });
     }
@@ -31,9 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign('products_seller_id');
-        });
+        Schema::dropIfExists('freebies');
     }
 };
