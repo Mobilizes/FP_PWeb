@@ -20,9 +20,4 @@ class Transaction extends Model
     {
         return $this->HasOne(Cart::class);
     }
-
-    public function sellers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, foreignPivotKey: 'seller_id');
-    }
 }
