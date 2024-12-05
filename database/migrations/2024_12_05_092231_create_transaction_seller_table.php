@@ -21,6 +21,7 @@ return new class extends Migration
                 table: 'users',
                 indexName: 'transaction_seller_seller_id'
             )->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
         });
     }

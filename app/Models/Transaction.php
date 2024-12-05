@@ -20,4 +20,9 @@ class Transaction extends Model
     {
         return $this->HasOne(Cart::class);
     }
+
+    public function sellers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'transaction_seller', 'transaction_id', 'seller_id');
+    }
 }

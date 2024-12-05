@@ -77,4 +77,9 @@ class User extends Authenticatable
     {
         return $this->cart()->find($this->current_cart_id);
     }
+
+    public function sellings(): BelongsToMany
+    {
+        return $this->belongsToMany(Transaction::class, 'transaction_seller', 'seller_id', 'transaction_id');
+    }
 }

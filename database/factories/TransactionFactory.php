@@ -30,6 +30,9 @@ class TransactionFactory extends Factory
             $cart = Cart::find($transaction->cart_id);
             $cart->transaction_id = $transaction->id;
             $cart->save();
+
+            $sellers = $cart->products->pluck('seller_id')->unique();
+            $transaction->sellers()->attach($sellers);
         });
     }
 }
