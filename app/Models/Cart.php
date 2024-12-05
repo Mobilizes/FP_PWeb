@@ -12,7 +12,7 @@ class Cart extends Model
     use HasFactory;
 
     protected $fillable = [
-        'quantity',
+        'buyer_id',
     ];
     
     public function buyer(): HasOne

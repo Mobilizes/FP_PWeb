@@ -20,8 +20,6 @@ class ProductController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        // TODO: Image upload
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|integer',

@@ -19,7 +19,7 @@ class TransactionFactory extends Factory
     public function definition(): array
     {   
         return [
-            'cart_id' => Cart::factory()->has(Product::factory())->create(),
+            'cart_id' => Cart::factory()->has(Product::factory(2))->create(),
             'status' => fake()->randomElement(['Pending', 'In Process', 'Failed', 'Finished']),
         ];
     }
