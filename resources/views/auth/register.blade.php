@@ -37,8 +37,8 @@
                 <x-input-label for="address" :value="__('Address')" />
                 {{-- <span class='text-red-600'>*</span> --}}
             </div>
-            <x-text-input id="phone" class="block w-full mt-1" type="text" name="phone" :value="old('phone')" autocomplete="phone" />
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+            <x-text-input id="address" class="block w-full mt-1" type="text" name="address" :value="old('address')" autocomplete="address" />
+            <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
 
         <!-- Password -->
