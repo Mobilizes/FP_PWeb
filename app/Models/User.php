@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,6 +28,7 @@ class User extends Authenticatable
         'password',
         'role',
         'balance',
+        'current_cart_id',
     ];
 
     /**
@@ -63,5 +66,20 @@ class User extends Authenticatable
     public function freebie(): HasMany
     {
         return $this->hasMany(Freebie::class, 'donator_id');
+    }
+    
+    public function cart(): HasMany
+    {
+        return $this->hasMany(Cart::class, 'buyer_id');
+    }
+
+    public function current_cart()
+    {
+        return $this->cart()->find($this->current_cart_id);
+    }
+
+    public function transactions(): BelongsToMany
+    {
+        return $this->belongsToMany(Transaction::class, 'transaction_seller', 'seller_id', 'transaction_id');
     }
 }
