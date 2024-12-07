@@ -3,9 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
 Route::get('/', function () {
+    return view('homepage');
+});
+
+Route::get('/blade-welcome', function () {
     return view('welcome');
 });
 
