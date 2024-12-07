@@ -1,1 +1,1 @@
-<img src="{{ asset('LogoFP.svg') }}" {{ $attributes }} alt="Application Logo">
+<img src="{{ asset('LogoFP.svg') }}" {{ $attributes }} alt="Application Logo" class='text-green-700 fill-current'>

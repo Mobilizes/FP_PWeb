@@ -14,10 +14,6 @@ Route::get('/blade-welcome', function () {
     return view('welcome');
 });
 
-Route::get('/auth/login', function () {
-    return view('auth.login');
-});
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
