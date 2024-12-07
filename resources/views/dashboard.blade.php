@@ -6,23 +6,28 @@
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-green-50 text-gray-800">
+<body class="text-gray-800 bg-green-50">
 
     <!-- Header -->
-    <header class="bg-green-700 text-white py-4">
-        <div class="container mx-auto flex justify-between  px-4 items-center">
+    <header class="py-4 text-white bg-green-700">
+        <div class="container flex items-center justify-between px-4 mx-auto">
             <h1 class="text-xl font-bold">ecoswap Dashboard</h1>
-            <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700">Logout</button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
+                    {{ __("Log out" )}}
+                </button>
+            </form>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto py-8 flex gap-4">
+    <main class="container flex gap-4 py-8 mx-auto">
 
         <!-- Menu Section -->
-        <section class="bg-white basis-1/5 rounded shadow-lg p-6 mb-6">
-            <!-- <h2 class="text-2xl font-bold text-green-700 mb-4">Profile</h2> -->
-             <div class="flex justify-center items-center py-4">
+        <section class="p-6 mb-6 bg-white rounded shadow-lg basis-1/5">
+            <!-- <h2 class="mb-4 text-2xl font-bold text-green-700">Profile</h2> -->
+             <div class="flex items-center justify-center py-4">
                  <svg width="60" height="60" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <rect width="160" height="160" rx="22" fill="#A1EEBD"/>
             <path d="M54.1 110.05C52.7 110.05 51.25 109.75 49.75 109.15C48.25 108.6 47.15 107.7 46.45 106.45C45 105.8 43.95 104.775 43.3 103.375C42.7 101.925 42.45 100.325 42.55 98.575C42.95 92.525 43.275 86.475 43.525 80.425C43.775 74.375 44.25 68.325 44.95 62.275C43.95 61.375 43.05 60.4 42.25 59.35C41.5 58.25 41.125 57.325 41.125 56.575C41.125 55.775 41.6 55.375 42.55 55.375C43.25 55.375 44.4 55.325 46 55.225C47.6 55.075 49.35 54.925 51.25 54.775C53.15 54.575 54.975 54.425 56.725 54.325C58.475 54.175 59.85 54.1 60.85 54.1C63.75 54.1 66.1 54.5 67.9 55.3C69.75 56.1 71.1 57.125 71.95 58.375C72.85 59.575 73.3 60.85 73.3 62.2C73.3 62.7 73.05 62.95 72.55 62.95C72.1 62.95 71.675 62.95 71.275 62.95C70.875 62.9 70.475 62.875 70.075 62.875C67.825 62.875 65.475 63 63.025 63.25C60.575 63.5 58.3 63.775 56.2 64.075C55.75 68.025 55.375 72.075 55.075 76.225C57.425 75.925 59.475 75.775 61.225 75.775C61.975 75.775 62.85 76 63.85 76.45C64.9 76.85 65.9 77.375 66.85 78.025C67.8 78.675 68.6 79.375 69.25 80.125C69.9 80.825 70.225 81.475 70.225 82.075C70.225 82.975 70 83.55 69.55 83.8C69.1 84.05 68.4 84.175 67.45 84.175C66.55 84.175 65.35 84.275 63.85 84.475C62.4 84.675 60.825 84.9 59.125 85.15C57.475 85.35 55.925 85.5 54.475 85.6C54.325 88 54.2 90.425 54.1 92.875C54 95.275 53.925 97.675 53.875 100.075C55.925 98.725 57.9 97.65 59.8 96.85C61.7 96 63.4 95.575 64.9 95.575C65.9 95.575 67.025 95.875 68.275 96.475C69.525 97.075 70.625 97.825 71.575 98.725C72.525 99.575 73 100.375 73 101.125C73 101.775 72.7 102.225 72.1 102.475L54.1 110.05Z" fill="#FAFAFA"/>
@@ -32,33 +37,33 @@
             </svg>
         </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                    <p><strong>Name:</strong> John Doe</p>
-                    <p><strong>Email:</strong> john.doe@example.com</p>
+                    <p><strong>Name:</strong> {{ Auth::User()->name}}</p>
+                    <p><strong>Email:</strong> {{ Auth::User()->email}} </p>
                 </div>
             </div>
         </section>
 
         <!-- Profile Section -->
-        <!-- <section class="bg-white basis-1/5 rounded shadow-lg p-6 mb-6">
-            <h2 class="text-2xl font-bold text-green-700 mb-4">Profile</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- <section class="p-6 mb-6 bg-white rounded shadow-lg basis-1/5">
+            <h2 class="mb-4 text-2xl font-bold text-green-700">Profile</h2>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <p><strong>Name:</strong> John Doe</p>
                     <p><strong>Email:</strong> john.doe@example.com</p>
                     <p><strong>Address:</strong> 123 Green Street, EcoCity</p>
                     <p><strong>Phone:</strong> +62 812 3456 7890</p>
-                    <p><strong>Points:</strong> <span class="text-green-700 font-bold">1500</span></p>
+                    <p><strong>Points:</strong> <span class="font-bold text-green-700">1500</span></p>
                 </div>
             </div>
         </section> -->
 
       
         <!-- Product List Section -->
-        <section class="bg-white rounded shadow-lg p-6">
-            <h2 class="text-2xl font-bold text-green-700 mb-4">Products for Sale</h2>
-            <table class="table-auto w-full">
+        <section class="p-6 bg-white rounded shadow-lg">
+            <h2 class="mb-4 text-2xl font-bold text-green-700">Products for Sale</h2>
+            <table class="w-full table-auto">
                 <thead>
                     <tr class="bg-green-100">
                         <th class="px-4 py-2">Name</th>
@@ -75,7 +80,7 @@
               <!-- Upload Product Section -->
         <section class="mb-6">
             <button 
-                class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+                class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800"
                 id="open-upload-modal"
             >
                 Upload Product
@@ -92,21 +97,21 @@
             </div>
             <!-- Tab Content -->
             <div id="content-shipping" class="tab-content">
-                <h3 class="text-xl font-bold text-green-700 mb-4">Barang Sedang Dikirim</h3>
-                <ul class="list-disc pl-6">
+                <h3 class="mb-4 text-xl font-bold text-green-700">Barang Sedang Dikirim</h3>
+                <ul class="pl-6 list-disc">
                     <li>Order #123 - Kursi Kayu Bekas - Dalam Pengiriman</li>
                     <li>Order #124 - Laptop Second - Dalam Pengiriman</li>
                 </ul>
             </div>
-            <div id="content-completed" class="tab-content hidden">
-                <h3 class="text-xl font-bold text-green-700 mb-4">Barang Selesai</h3>
-                <ul class="list-disc pl-6">
+            <div id="content-completed" class="hidden tab-content">
+                <h3 class="mb-4 text-xl font-bold text-green-700">Barang Selesai</h3>
+                <ul class="pl-6 list-disc">
                     <li>Order #122 - Panci Stainless - Tiba pada 20 Nov 2024</li>
                 </ul>
             </div>
-            <div id="content-rated" class="tab-content hidden">
-                <h3 class="text-xl font-bold text-green-700 mb-4">Barang Sudah Dinilai</h3>
-                <ul class="list-disc pl-6">
+            <div id="content-rated" class="hidden tab-content">
+                <h3 class="mb-4 text-xl font-bold text-green-700">Barang Sudah Dinilai</h3>
+                <ul class="pl-6 list-disc">
                     <li>Order #120 - Rak Besi - Dinilai pada 15 Nov 2024</li>
                 </ul>
             </div>
@@ -114,74 +119,74 @@
 
     </main>
 
-    <footer class="bg-green-700 text-white py-4 text-center">
+    <footer class="py-4 text-center text-white bg-green-700">
         <p>&copy; 2024 ecoswap. All rights reserved.</p>
     </footer>
 
     <!-- Upload Product Modal -->
     <div 
         id="upload-modal" 
-        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden"
+        class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50"
     >
-        <div class="bg-white rounded shadow-lg w-96 p-6">
-            <h3 class="text-xl font-bold text-green-700 mb-4">Upload Product</h3>
+        <div class="p-6 bg-white rounded shadow-lg w-96">
+            <h3 class="mb-4 text-xl font-bold text-green-700">Upload Product</h3>
             <form id="upload-form">
                 <div class="mb-4">
-                    <label class="block font-bold mb-2">Name</label>
+                    <label class="block mb-2 font-bold">Name</label>
                     <input 
                         type="text" 
                         id="product-name" 
-                        class="w-full border rounded p-2" 
+                        class="w-full p-2 border rounded" 
                         required
                     >
                 </div>
                 <div class="mb-4">
-                    <label class="block font-bold mb-2">Description</label>
+                    <label class="block mb-2 font-bold">Description</label>
                     <textarea 
                         id="product-description" 
-                        class="w-full border rounded p-2" 
+                        class="w-full p-2 border rounded" 
                         rows="3"
                         required
                     ></textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="block font-bold mb-2">Price</label>
+                    <label class="block mb-2 font-bold">Price</label>
                     <input 
                         type="number" 
                         id="product-price" 
-                        class="w-full border rounded p-2" 
+                        class="w-full p-2 border rounded" 
                         required
                     >
                 </div>
                 <div class="mb-4">
-                    <label class="block font-bold mb-2">Stock</label>
+                    <label class="block mb-2 font-bold">Stock</label>
                     <input 
                         type="number" 
                         id="product-stock" 
-                        class="w-full border rounded p-2" 
+                        class="w-full p-2 border rounded" 
                         required
                     >
                 </div>
                 <div class="mb-4">
-                    <label class="block font-bold mb-2">Image</label>
+                    <label class="block mb-2 font-bold">Image</label>
                     <input 
                         type="file" 
                         id="product-image" 
-                        class="w-full border rounded p-2"
+                        class="w-full p-2 border rounded"
                         accept="image/*"
                     >
                 </div>
                 <div class="flex justify-between">
                     <button 
                         type="button" 
-                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                        class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
                         id="close-upload-modal"
                     >
                         Cancel
                     </button>
                     <button 
                         type="submit" 
-                        class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+                        class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800"
                     >
                         Upload
                     </button>
@@ -220,11 +225,11 @@
 
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
-                <td class="border px-4 py-2">${name}</td>
-                <td class="border px-4 py-2">${description}</td>
-                <td class="border px-4 py-2">$${price}</td>
-                <td class="border px-4 py-2">${stock}</td>
-                <td class="border px-4 py-2">${status}</td>
+                <td class="px-4 py-2 border">${name}</td>
+                <td class="px-4 py-2 border">${description}</td>
+                <td class="px-4 py-2 border">$${price}</td>
+                <td class="px-4 py-2 border">${stock}</td>
+                <td class="px-4 py-2 border">${status}</td>
             `;
 
             productList.appendChild(newRow);
