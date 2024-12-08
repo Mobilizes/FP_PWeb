@@ -49,25 +49,11 @@
                     <p><strong>Name:</strong> {{ Auth::User()->name}}</p>
                     <p><strong>Email:</strong> {{ Auth::User()->email}} </p>
                     <x-primary-button onclick="window.location='{{ route('profile.edit') }}'" class="mt-3 w-max">
-                        {{ __('Change') }}
+                        {{ __('Change') }} 
                     </x-primary-button>
                 </div>
             </div>
         </section>
-
-        <!-- Profile Section -->
-        <!-- <section class="p-6 mb-6 bg-white rounded shadow-lg basis-1/5">
-            <h2 class="mb-4 text-2xl font-bold text-green-700">Profile</h2>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                    <p><strong>Name:</strong> John Doe</p>
-                    <p><strong>Email:</strong> john.doe@example.com</p>
-                    <p><strong>Address:</strong> 123 Green Street, EcoCity</p>
-                    <p><strong>Phone:</strong> +62 812 3456 7890</p>
-                    <p><strong>Points:</strong> <span class="font-bold text-green-700">1500</span></p>
-                </div>
-            </div>
-        </section> -->
 
       
         <!-- Product List Section -->

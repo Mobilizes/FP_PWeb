@@ -58,12 +58,21 @@
                 </div>
             </div>
             <div class="flex flex-col gap-2">
-                <button class="menu-btn" data-target="profile">Profile</button>
+                <button class="menu-btn" data-target="profile" id="profile">Profile</button>
+                <x-primary-button onclick="window.location='{{ route('profile.edit') }}'" class="mt-3 w-max">
+                    {{ __('Change') }} 
+                </x-primary-button>
                 <button class="menu-btn" data-target="product-sale">Product For Sale</button>
                 <button class="menu-btn" data-target="product-buy">Product Buy</button>
+                <button> ABC</button>
                 <button class="logout-btn">Logout</button>
             </div>
         </section>
+        
+        <div id="profile" class="hidden">
+            @include('dashboard.change-profile')
+        </div>
+
 
         <!-- Dynamic Content Section -->
         <section id="main-content" class="bg-white flex-1 rounded shadow-lg p-6">
@@ -81,26 +90,34 @@
         <p>&copy; 2024 ecoswap. All rights reserved.</p>
     </footer>
 
+    <div id="profile" class="hidden">
+        @include('dashboard.change-profile')
+    </div>
+
     <script>
+
+document.getElementById('profile').addEventListener('click', function() {
+            document.getElementById('profile').classList.remove('hidden');
+            // document.getElementById('section-b-container').classList.add('hidden');
+        });
+
+        
+
+        document.getElementById('profile').classList.remove('hidden');
+
+
         const mainContent = document.getElementById('main-content');
         const modalContainer = document.getElementById('modal-container');
         const modalContent = modalContainer.querySelector('.modal-content');
 
         // Section Content Loaders
         const loadProfileSection = () => {
-            mainContent.innerHTML = `
-                <h2 class="text-2xl font-bold text-green-700 mb-4">User Profile</h2>
-                <form id="profile-form" class="space-y-4">
-                    <div><label class="block font-bold mb-2">Name</label><input type="text" value="Gerry" class="w-full border rounded p-2"></div>
-                    <div><label class="block font-bold mb-2">Email</label><input type="email" value="gerry@gmail.com" class="w-full border rounded p-2"></div>
-                    <div><label class="block font-bold mb-2">Phone</label><input type="tel" value="+62 812 3456 7890" class="w-full border rounded p-2"></div>
-                    <div><label class="block font-bold mb-2">Balance</label><input type="text" value="Rp 1,500,000" class="w-full border rounded p-2"></div>
-                    <div><label class="block font-bold mb-2">Address</label><input type="text" value="123 Green Street, EcoCity" class="w-full border rounded p-2"></div>
-                    <button type="button" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 mt-4" onclick="showModal('Save Profile Changes?')">Update Profile</button>
-                </form>
-            `;
-        };
-
+        const profileSection = document.getElementById("profile");
+        if (profileSection) {
+            profileSection.classList.remove("hidden");
+        }
+    };
+    
         const loadProductSaleSection = () => {
             mainContent.innerHTML = `
                 <h2 class="text-2xl font-bold text-green-700 mb-4">Products For Sale</h2>

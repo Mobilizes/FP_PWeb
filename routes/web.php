@@ -18,9 +18,18 @@ Route::get('/auth/login', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard2', function () {
+    return view('dashboard.dashboard2');
 });
+
+Route::get('/change-profile', function () {
+    Route::get('/change-profile', [ProfileController::class, 'showChangeProfile'])->name('change-profile');
+    return view('change-profile');
+})->name('change-profile');
+
+Route::get('/change-profile', function () {
+    return view('change-profile');
+})->name('change-profile');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
