@@ -48,8 +48,8 @@
                 <div>
                     <p><strong>Name:</strong> {{ Auth::User()->name}}</p>
                     <p><strong>Email:</strong> {{ Auth::User()->email}} </p>
-                    <x-primary-button href="{{ route('profile.edit')}}" class="mt-3 w-max">
-                        {{ __("Change") }}
+                    <x-primary-button onclick="window.location='{{ route('profile.edit') }}'" class="mt-3 w-max">
+                        {{ __('Change') }}
                     </x-primary-button>
                 </div>
             </div>
