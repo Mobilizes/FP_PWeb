@@ -18,7 +18,6 @@ return new class extends Migration
                 table: 'users',
                 indexName: 'carts_buyer_id'
             );
-            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }

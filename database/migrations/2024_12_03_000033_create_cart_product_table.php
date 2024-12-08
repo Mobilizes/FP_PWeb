@@ -20,6 +20,7 @@ return new class extends Migration
                 table: 'carts',
                 indexName: 'cart_product_cart_id'
             )->onDelete('cascade')->onUpdate('cascade');
+            $table->integer('quantity')->default(1);
         });
     }
 

@@ -18,7 +18,6 @@ class CartFactory extends Factory
     {
         return [
             'buyer_id' => User::factory(),
-            'quantity' => fake()->numberBetween(1, 10),
         ];
     }
 }
