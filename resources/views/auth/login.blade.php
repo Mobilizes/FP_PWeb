@@ -19,7 +19,7 @@
             <x-text-input id="password" class="block w-full mt-1"
                             type="password"
                             name="password"
-                            required autocomplete="current-password" />
+                            required />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>

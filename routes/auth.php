@@ -56,4 +56,16 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('homepage', function () {
+        return redirect('/');
+    })->name('homepage');
+    
+    Route::get('product', function () {
+        return view('product');
+    })->name('product');
+
+    Route::get('/cart', function () {
+        return view('cart');
+    })->name('cart');   
 });

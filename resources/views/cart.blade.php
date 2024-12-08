@@ -33,22 +33,25 @@ $cart = [
     <title>Cart</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-green-50 text-gray-800">
-    <header class="bg-green-700 text-white py-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">ecoswap</h1>
-            <a href="products.php" class="hover:text-green-300">Back to Products</a>
+<body class="text-gray-800 bg-green-50">
+    <header class="py-4 text-white bg-green-700">
+        <div class="container flex items-center justify-between mx-5">
+            <div class='flex flex-row items-center gap-3 md:gap-5'>
+                <x-application-logo class=h-10/>
+                <h1 class="text-xl font-bold">ecoswap</h1>
+            </div>
+            <a href="{{ route('product') }}" class="mr-10 md:mr-0 hover:text-green-300">Back to Products</a>
         </div>
     </header>
 
-    <main class="container mx-auto py-8">
-        <h2 class="text-3xl font-bold text-green-700 text-center mb-6">Your Cart</h2>
+    <main class="container py-8 mx-auto">
+        <h2 class="mb-6 text-3xl font-bold text-center text-green-700">Your Cart</h2>
 
         <?php if (!empty($cart)): ?>
             <!-- Cart Table -->
             <div class="overflow-x-auto">
-                <table class="w-full bg-white rounded shadow-lg text-left">
-                    <thead class="bg-green-700 text-white">
+                <table class="w-full text-left bg-white rounded shadow-lg">
+                    <thead class="text-white bg-green-700">
                         <tr>
                             <th class="p-4">Image</th>
                             <th class="p-4">Product</th>
@@ -66,17 +69,17 @@ $cart = [
                             $total += $subtotal;
                         ?>
                             <tr class="border-t">
-                                <td class="p-4"><img src="<?= $item['image'] ?>" alt="<?= $item['name'] ?>" class="w-20 h-20 object-cover"></td>
+                                <td class="p-4"><img src="<?= $item['image'] ?>" alt="<?= $item['name'] ?>" class="object-cover w-20 h-20"></td>
                                 <td class="p-4"><?= htmlspecialchars($item['name']) ?></td>
                                 <td class="p-4">Rp <?= number_format($item['price'], 0, ',', '.') ?></td>
-                                <td class="p-4 flex items-center">
-                                    <button class="px-2 py-1 bg-green-700 text-white rounded hover:bg-green-800" onclick="updateQuantity(<?= $item['id'] ?>, -1)">-</button>
+                                <td class="flex items-center p-4">
+                                    <button class="px-2 py-1 text-white bg-green-700 rounded hover:bg-green-800" onclick="updateQuantity(<?= $item['id'] ?>, -1)">-</button>
                                     <span class="px-4"><?= $item['quantity'] ?></span>
-                                    <button class="px-2 py-1 bg-green-700 text-white rounded hover:bg-green-800" onclick="updateQuantity(<?= $item['id'] ?>, 1)">+</button>
+                                    <button class="px-2 py-1 text-white bg-green-700 rounded hover:bg-green-800" onclick="updateQuantity(<?= $item['id'] ?>, 1)">+</button>
                                 </td>
                                 <td class="p-4">Rp <?= number_format($subtotal, 0, ',', '.') ?></td>
                                 <td class="p-4">
-                                    <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" onclick="removeFromCart(<?= $item['id'] ?>)">Remove</button>
+                                    <button class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700" onclick="removeFromCart(<?= $item['id'] ?>)">Remove</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -85,12 +88,12 @@ $cart = [
             </div>
 
             <!-- Total and Checkout -->
-            <div class="mt-8 flex justify-between items-center">
+            <div class="flex items-center justify-between mt-8">
                 <h3 class="text-xl font-bold text-green-700">Total: Rp <span id="total-price"><?= number_format($total, 0, ',', '.') ?></span></h3>
-                <button class="bg-green-700 text-white px-6 py-3 rounded hover:bg-green-800" onclick="checkout()">Checkout</button>
+                <button class="px-6 py-3 text-white bg-green-700 rounded hover:bg-green-800" onclick="checkout()">Checkout</button>
             </div>
         <?php else: ?>
-            <p class="text-center text-gray-600">Your cart is empty. <a href="products.php" class="text-green-700 font-bold">Shop now!</a></p>
+            <p class="text-center text-gray-600">Your cart is empty. <a href="products.php" class="font-bold text-green-700">Shop now!</a></p>
         <?php endif; ?>
     </main>
 
@@ -121,17 +124,17 @@ $cart = [
                 total += subtotal;
                 return `
                     <tr class="border-t">
-                        <td class="p-4"><img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover"></td>
+                        <td class="p-4"><img src="${item.image}" alt="${item.name}" class="object-cover w-20 h-20"></td>
                         <td class="p-4">${item.name}</td>
                         <td class="p-4">Rp ${item.price.toLocaleString()}</td>
-                        <td class="p-4 flex items-center">
-                            <button class="px-2 py-1 bg-green-700 text-white rounded hover:bg-green-800" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <td class="flex items-center p-4">
+                            <button class="px-2 py-1 text-white bg-green-700 rounded hover:bg-green-800" onclick="updateQuantity(${item.id}, -1)">-</button>
                             <span class="px-4">${item.quantity}</span>
-                            <button class="px-2 py-1 bg-green-700 text-white rounded hover:bg-green-800" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            <button class="px-2 py-1 text-white bg-green-700 rounded hover:bg-green-800" onclick="updateQuantity(${item.id}, 1)">+</button>
                         </td>
                         <td class="p-4">Rp ${subtotal.toLocaleString()}</td>
                         <td class="p-4">
-                            <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" onclick="removeFromCart(${item.id})">Remove</button>
+                            <button class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700" onclick="removeFromCart(${item.id})">Remove</button>
                         </td>
                     </tr>
                 `;

@@ -14,6 +14,10 @@ Route::get('/blade-welcome', function () {
     return view('welcome');
 });
 
+Route::get('/auth/login', function () {
+    return view('auth.login');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
@@ -32,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/products/create', function () {
-        $products = Product::where('seller_id', Auth::id())->get();
+        $products = Product::where('seller_id', operator: Auth::id())->get();
 
         return view('products.create', compact('products'));
     })->name('products.create');
@@ -41,5 +45,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/seller/{sellerId}', [ProductController::class, 'getBySellerId']);
-
 require __DIR__.'/auth.php';

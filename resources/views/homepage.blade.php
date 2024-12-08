@@ -24,22 +24,26 @@
                     <li><a href="#products" class="hover:text-green-300">Our Products</a></li>
                     <li><a href="#testimonials" class="hover:text-green-300">Testimonials</a></li>
                     @if (Route::has('login'))
-                        <li>
                             @auth
                                 <a href="{{ url('/dashboard') }}" class="hover:text-green-300">
-                                    Dashboard
+                                    <li>Dashboard</li>
                                 </a>
-                                <a href="{{ route('logout') }}" class="hover:text-green-300">
-                                    Log out
-                                </a>
+                                <form method='POST' action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type='submit' class="hover:text-green-300">
+                                        {{ __('Log Out') }}
+                                    </button>
+                                </form>
                             @else
                                 <a href="{{ route('login') }}" class="hover:text-green-300">
-                                    Log in
+                                    <li>Log in</li>
                                 </a>
                                 @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="hover:text-green-300">
-                                        Register
-                                    </a>
+                                    <li>
+                                        <a href="{{ route('register') }}" class="hover:text-green-300">
+                                            Register
+                                        </a>
+                                    </li>
                                 @endif
                             @endauth 
                         </li>
