@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
 
@@ -24,6 +26,9 @@ Route::middleware('auth')->group(function () {
         return view('products.create', compact('products'));
     })->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+    Route::get('/transactions/buyer', [TransactionController::class, 'showBuyer'])->name('transactions.buyer');
+    Route::get('/transactions/seller', [TransactionController::class, 'showSeller'])->name('transactions.seller');
 });
 
 Route::get('/products', [ProductController::class, 'index']);

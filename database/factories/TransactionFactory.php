@@ -19,9 +19,18 @@ class TransactionFactory extends Factory
     public function definition(): array
     {   
         return [
-            'cart_id' => Cart::factory()->has(Product::factory(2))->create(),
-            'status' => fake()->randomElement(['Pending', 'In Process', 'Failed', 'Finished']),
+            'cart_id' => Cart::factory(),
+            'status' => 'Pending',
         ];
+    }
+
+    public function withCart(Cart $cart)
+    {
+        return $this->state(function (array $attributes) use ($cart) {
+            return [
+                'cart_id' => $cart->id,
+            ];
+        });
     }
 
     public function configure()

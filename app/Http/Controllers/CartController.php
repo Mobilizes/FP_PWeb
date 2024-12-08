@@ -62,11 +62,49 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart deleted'], 201);
     }
 
+    public function add(Request $request): JsonResponse
+    {
+        // add new product to cart
+
+        $data = $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer'
+        ]);
+
+        $user = User::find(Auth::id());
+
+        if (!$user->current_cart_id) {
+            return response()->json(['message' => 'User does not have a current cart'], 404);
+        }
+
+        $cart = Cart::find($user->current_cart_id);
+        if (!$cart) {
+            return response()->json(['message'=> 'Cart does not exist'], 404);
+        }
+
+        $existingProduct = $cart->products()->where('product_id', $data['product_id'])->first();
+        if ($existingProduct->seller_id === $user->id) {
+            return response()->json(['message'=> 'Cannot buy your own product'], 404);
+        }
+
+        if ($existingProduct) {
+            $cart->products()->updateExistingPivot($data['product_id'], [
+                'quantity' => $existingProduct->pivot->quantity + $data['quantity']
+            ]);
+        } else if ($data['quantity'] > 0) {
+            $cart->products()->attach($data['product_id'], ['quantity' => $data['quantity']]);
+        } else {
+            return response()->json(['message'=> 'Product has invalid quantity'], 404);
+        }
+
+        return response()->json(['message'=> 'Product added to cart'], 200);
+    }
+
     public function update(Request $request): JsonResponse
     {
         // update cart (modify products in cart)
 
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'product_id' => 'required|integer',
             'quantity' => 'required|integer'
         ]);
@@ -87,13 +125,13 @@ class CartController extends Controller
             return response()->json(['message'=> 'Cart cannot be modified, because it has ongoing transaction'], 404);
         }
 
-        $pivot = $cart->pivot->where('product_id', $validatedData['product_id'])->first();
+        $pivot = $cart->pivot->where('product_id', $data['product_id'])->first();
 
         if (!$pivot) {
             return response()->json(['message' => 'Cart does not have the requested product'], 404);
         }
 
-        if ($validatedData['quantity'] === 0) {
+        if ($data['quantity'] === 0) {
             // if its the last product in cart, remove the cart
             // otherwise, just remove the product from cart
             if ($cart->products->count() === 1) {
@@ -104,12 +142,12 @@ class CartController extends Controller
                 return response()->json(['message' => 'Cart removed because there is no products left'], 200);
             }
 
-            $cart->products()->detach($validatedData['product_id']);
+            $cart->products()->detach($data['product_id']);
 
             return response()->json(['message' => 'Product removed from cart'], 200);
         }
 
-        $pivot->quantity = $validatedData['quantity'];
+        $pivot->quantity = $data['quantity'];
 
         return response()->json(['message' => 'Cart updated'], 200);
     }

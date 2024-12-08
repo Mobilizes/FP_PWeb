@@ -13,10 +13,30 @@ class TransactionController extends Controller
 {
     public function showBuyer(): JsonResponse
     {
-        $carts = Cart::where("buyer_id", Auth::id());
+        $carts = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
         $transactions = $carts->pluck('transaction')->filter();
 
-        return response()->json($transactions);
+        $response = $transactions->map(function ($transaction) {
+            $cart = Cart::find($transaction->cart_id);
+            $cart = $cart->products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $product->pivot->quantity,
+                ];
+            });
+
+            return [
+                'id' => $transaction->id,
+                'status' => $transaction->status,
+                'cart' => $cart,
+                'created_at' => $transaction->created_at,
+                'updated_at' => $transaction->updated_at,
+            ];
+        });
+
+        return response()->json($response);
     }
 
     public function showSeller(): JsonResponse
@@ -25,14 +45,34 @@ class TransactionController extends Controller
             $query->where('seller_id', Auth::id());
         })->get();
 
-        return response()->json($transactions);
+        $response = $transactions->map(function ($transaction) {
+            $cart = Cart::find($transaction->cart_id);
+            $cart = $cart->products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $product->pivot->quantity,
+                ];
+            });
+
+            return [
+                'id' => $transaction->id,
+                'status' => $transaction->status,
+                'cart' => $cart,
+                'created_at' => $transaction->created_at,
+                'updated_at' => $transaction->updated_at,
+            ];
+        });
+
+        return response()->json($response);
     }
 
     public function sellerInProgress(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
             'transaction_id' => 'required|integer',
-            'accept' => 'required|boolean',
+            'approve' => 'required|boolean',
         ]);
 
         $user = User::find(Auth::id());
@@ -48,7 +88,7 @@ class TransactionController extends Controller
             return response()->json(['message' => 'Seller already approved this transaction'], 200);
         }
 
-        if ($validatedData['accept'] === false) {
+        if ($validatedData['approve'] === false) {
             // Remove all products that are sold by seller from cart
             $cart = $transaction->cart;
             $products = $cart->products()->where('seller_id', $user->id)->get();
@@ -68,10 +108,18 @@ class TransactionController extends Controller
             return response()->json(['message' => 'Seller denied, deleted seller\'s products from transaction'], 200);
         }
 
-        $transaction->status = 'In Progress';
+        $pivot->approved = true;
         $transaction->save();
 
-        return response()->json(['message' => 'Transaction set to In Progress.'], 200);
+        $allApproved = $transaction->sellers()->wherePivot('approved', false)->count() === 0;
+        if ($allApproved) {
+            $transaction->status = 'Pending';
+            $transaction->save();
+
+            return response()->json(['message' => 'Transaction set to In Progress.'], 200);
+        }
+
+        return response()->json(['message' => 'Seller approved transaction'], 200);
     }
 
     public function clientFinished(Request $request): JsonResponse
