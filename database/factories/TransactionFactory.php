@@ -19,9 +19,18 @@ class TransactionFactory extends Factory
     public function definition(): array
     {   
         return [
-            'cart_id' => Cart::factory()->has(Product::factory())->create(),
-            'status' => fake()->randomElement(['Pending', 'In Process', 'Failed', 'Finished']),
+            'cart_id' => Cart::factory(),
+            'status' => 'Pending',
         ];
+    }
+
+    public function withCart(Cart $cart)
+    {
+        return $this->state(function (array $attributes) use ($cart) {
+            return [
+                'cart_id' => $cart->id,
+            ];
+        });
     }
 
     public function configure()
@@ -30,6 +39,9 @@ class TransactionFactory extends Factory
             $cart = Cart::find($transaction->cart_id);
             $cart->transaction_id = $transaction->id;
             $cart->save();
+
+            $sellers = $cart->products->pluck('seller_id')->unique();
+            $transaction->sellers()->attach($sellers);
         });
     }
 }

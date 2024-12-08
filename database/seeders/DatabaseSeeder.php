@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,20 +15,41 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::factory(5)->create();
-
-        // Create 10 products and associate them with existing users
-        Product::factory(10)->create()->each(function ($product) use ($users) {
-            $product->seller_id = $users->random()->id;
-            $product->save();
-        });
-
-        // Create 3 transactions and associate them with existing users and products
-        Transaction::factory(3)->create();
-
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        
+        Product::factory(5)->create();
+
+        Cart::factory(1)->create()->each(function ($cart) {
+            $cart->buyer_id = 1;
+            $cart->save();
+
+            $products = Product::all();
+            foreach ($products as $product) {
+                $cart->products()->attach($product->id, ['quantity' => rand(1, 5)]);
+            }
+        });
+        
+        Product::factory(3)->create([
+            'seller_id' => 1,
+        ]);
+
+        Cart::factory(1)->create()->each(function ($cart) {
+            $products = Product::where('seller_id', 1)->get();
+            foreach ($products as $product) {
+                $cart->products()->attach($product->id, ['quantity' => rand(1, 5)]);
+            }
+        });
+
+        User::where('id', 1)->update([
+            'current_cart_id' => 1,
+        ]);
+
+        Transaction::factory(1)->withCart(Cart::find(1))->create();
+
+        // for seller testing
+        Transaction::factory(1)->withCart(Cart::find(2))->create();
     }
 }
