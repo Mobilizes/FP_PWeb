@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
@@ -27,6 +26,10 @@ Route::get('/dashboard', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/dashboard2', function () {
+    return view('dashboard2');
+})->middleware(['auth'])->name('dashboard2');
 
 Route::get('/cart', function () {
     return view('cart');

@@ -1,12 +1,3 @@
-<?php
-// Data produk (simulasi database)
-$products = [
-    ["id" => 1, "name" => "Kursi Kayu Bekas", "price" => 50000, "image" => "https://via.placeholder.com/150", "description" => "Kursi kayu bekas dengan kondisi baik.", "stock" => 10],
-    ["id" => 2, "name" => "Laptop Second", "price" => 2000000, "image" => "https://via.placeholder.com/150", "description" => "Laptop second dengan spesifikasi mumpuni.", "stock" => 5],
-    ["id" => 3, "name" => "Sepeda Bekas", "price" => 800000, "image" => "https://via.placeholder.com/150", "description" => "Sepeda bekas dengan performa tinggi.", "stock" => 7],
-    ["id" => 4, "name" => "Panci Stainless", "price" => 75000, "image" => "https://via.placeholder.com/150", "description" => "Panci stainless dengan daya tahan tinggi.", "stock" => 20],
-];
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
