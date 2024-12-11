@@ -1,12 +1,3 @@
-<?php
-// Data produk (simulasi database)
-$products = [
-    ["id" => 1, "name" => "Kursi Kayu Bekas", "price" => 50000, "image" => "https://via.placeholder.com/150", "description" => "Kursi kayu bekas dengan kondisi baik.", "stock" => 10],
-    ["id" => 2, "name" => "Laptop Second", "price" => 2000000, "image" => "https://via.placeholder.com/150", "description" => "Laptop second dengan spesifikasi mumpuni.", "stock" => 5],
-    ["id" => 3, "name" => "Sepeda Bekas", "price" => 800000, "image" => "https://via.placeholder.com/150", "description" => "Sepeda bekas dengan performa tinggi.", "stock" => 7],
-    ["id" => 4, "name" => "Panci Stainless", "price" => 75000, "image" => "https://via.placeholder.com/150", "description" => "Panci stainless dengan daya tahan tinggi.", "stock" => 20],
-];
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,17 +36,26 @@ $products = [
 
         <!-- Products Grid -->
         <div id="products-grid" class="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <?php foreach ($products as $product): ?>
+            @foreach ($products as $product)
                 <div
                     class="p-4 bg-white rounded shadow product-card"
-                    data-name="<?= htmlspecialchars($product['name']) ?>"
-                    onclick="openModal(<?= htmlspecialchars(json_encode($product), ENT_QUOTES, 'UTF-8') ?>)"
+                    data-name="{{ $product->name }}"
+                    onclick="openModal({
+                        id: '{{ $product->id }}',
+                        name: '{{ $product->name }}',
+                        description: '{{ $product->description }}',
+                        stock: '{{ $product->stock }}',
+                        image: '{{ Storage::url($product->image_path) }}'
+                    })"
                 >
-                    <img src="<?= $product['image'] ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="mx-auto mb-4">
-                    <h3 class="text-lg font-bold"><?= htmlspecialchars($product['name']) ?></h3>
-                    <p class="text-gray-600">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
+                    <img src="{{ Storage::url($product->image_path) }}" 
+                        alt="{{ $product->name }}" 
+                        class="object-cover w-150 h-150 mx-auto rounded"
+                        style="width: 150px; height: 150px;">
+                    <h3 class="text-lg font-bold">{{ $product->name }}</h3>
+                    <p class="text-gray-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 </div>
-            <?php endforeach; ?>
+            @endforeach
         </div>
     </main>
 
@@ -75,7 +75,12 @@ $products = [
                 <button onclick="closeModal()" class="text-gray-600 hover:text-gray-900">&times;</button>
             </div>
             <div class="p-4">
-                <img id="modal-image" src="" alt="Product Image" class="object-cover w-full h-64 mb-4">
+                <img 
+                    id="modal-image"
+                    src="" 
+                    alt="" 
+                    class="object-cover w-150 h-150 mx-auto rounded"
+                    style="width: 320px; height: 320px;">
                 <p id="modal-description" class="mb-4 text-gray-700"></p>
                 <p id="modal-stock" class="text-sm text-gray-500">Stock: <span></span></p>
 
@@ -98,7 +103,8 @@ $products = [
 
         function openModal(product) {
             document.getElementById('modal-title').textContent = product.name;
-            document.getElementById('modal-image').src = product.image;
+            document.getElementById('modal-image').src = product.image; 
+            document.getElementById('modal-image').alt = product.name;
             document.getElementById('modal-description').textContent = product.description;
             document.getElementById('modal-stock').querySelector('span').textContent = product.stock;
             document.getElementById('modal-product-id').value = product.id;
@@ -119,7 +125,7 @@ $products = [
         }
 
         function goToCart() {
-            window.location.href = '{{ route('cart')}}';
+            window.location.href = '{{ route('cart') }}';
         }
 
         function filterProducts() {

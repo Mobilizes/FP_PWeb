@@ -11,6 +11,11 @@ Route::get('/', function () {
     return view('homepage', compact('products'));
 });
 
+Route::get('/product', function () {
+    $products = Product::all();
+    return view('product', compact('products'));
+});
+
 Route::get('/blade-welcome', function () {
     return view('welcome');
 });
