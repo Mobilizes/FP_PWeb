@@ -17,7 +17,7 @@ return new class extends Migration
                 table: 'carts',
                 indexName: 'transactions_cart_id'
             );
-            $table->enum('status', ['Pending', 'In Process', 'Failed', 'Finished'])->default('Pending');
+            $table->enum('status', ['Pending', 'In Progress', 'Failed', 'Finished'])->default('Pending');
             $table->timestamps();
         });
     }

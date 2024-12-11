@@ -18,6 +18,18 @@ class CartController extends Controller
         return response()->json($carts);
     }
 
+    public function showCurrentCart(): JsonResponse
+    {
+        $user = User::find(Auth::id());
+
+        if (!$user || !$user->current_cart_id) {
+            return response()->json(['message' => 'No current cart found'], 404);
+        }
+        
+        $cart = Cart::find($user->current_cart_id);
+        return response()->json($cart);
+    }
+
     public function store(): JsonResponse
     {
         // create new cart if it doesnt exist in the current user
@@ -156,7 +168,7 @@ class CartController extends Controller
     {
         // show all products in cart
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
 
         if (!$user->current_cart_id) {
             return response()->json(['message' => 'Cart does not exist'], 404);
