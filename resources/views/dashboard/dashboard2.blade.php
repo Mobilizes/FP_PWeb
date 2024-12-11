@@ -54,6 +54,7 @@
                 <div>
                     <p><strong>Gerry</strong></p>
                     <p>gerry@gmail.com</p>
+                    <p>Saldo : Rp 150.000</p>
                 </div>
             </div>
             <div class="flex flex-col gap-2">
@@ -89,7 +90,7 @@
           // ============== TRANSACTION START ==============
           let currentTransactionType = "sale";
 
-const loadTransactionsSection = () => {
+    const loadTransactionsSection = () => {
     const transactionsContent = document.getElementById("main-content");
     transactionsContent.innerHTML = `
         <div>
@@ -276,13 +277,11 @@ const updateStatus = (newStatus, transactionIndex) => {
     }
     closeModal();
 };
-
-
-       
           // ============== TRANSACTION END ==============
 
 
-        // ============== PROFILE ==============
+
+        // ============== PROFILE START ==============
         const loadProfileSection = () => {
             mainContent.innerHTML = `
                 <h2 class="text-2xl font-bold text-green-700 mb-4">User Profile</h2>
@@ -290,12 +289,21 @@ const updateStatus = (newStatus, transactionIndex) => {
                     <div><label class="block font-bold mb-2">Name</label><input type="text" value="Gerry" class="w-full border rounded p-2"></div>
                     <div><label class="block font-bold mb-2">Email</label><input type="email" value="gerry@gmail.com" class="w-full border rounded p-2"></div>
                     <div><label class="block font-bold mb-2">Phone</label><input type="tel" value="+62 812 3456 7890" class="w-full border rounded p-2"></div>
-                    <div><label class="block font-bold mb-2">Balance</label><input type="text" value="Rp 1,500,000" class="w-full border rounded p-2"></div>
                     <div><label class="block font-bold mb-2">Address</label><input type="text" value="123 Green Street, EcoCity" class="w-full border rounded p-2"></div>
                     <button type="button" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 mt-4" onclick="showModal('Save Profile Changes?')">Update Profile</button>
                 </form>
+                <h2 class="text-2xl font-bold text-green-700 mt-8 mb-4">Reset Password</h2>
+                 <form id="profile-form" class="space-y-4">
+                    <div><label class="block font-bold mb-2">Current Password</label><input type="text" value="" class="w-full border rounded p-2"></div>
+                    <div><label class="block font-bold mb-2">New Password/label><input type="text" value="" class="w-full border rounded p-2"></div>
+                    <div><label class="block font-bold mb-2">Confirm Password/label><input type="text" value="" class="w-full border rounded p-2"></div>
+                    <button type="button" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 mt-4" onclick="showModal('Save Profile Changes?')">Change Password</button>
+                </form>
+
             `;
         };
+        // ============== PROFILE END ==============
+
 
           // ============== SALE ==============
           <?php
@@ -322,6 +330,7 @@ $products = [
                     <img src="<?= $product['image'] ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="mx-auto mb-4">
                     <h3 class="text-lg font-bold"><?= htmlspecialchars($product['name']) ?></h3>
                     <p class="text-gray-600">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
+                    <p class="text-gray-600"> Stock <?= number_format($product['stock'], 0, ',', '.') ?></p>
                 </div>
             <?php endforeach; ?>
         </div>
