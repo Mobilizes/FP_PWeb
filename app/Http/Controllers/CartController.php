@@ -18,16 +18,16 @@ class CartController extends Controller
         return response()->json($carts);
     }
 
-    public function showCurrentCart(): JsonResponse
+    public function showCurrentCart()
     {
         $user = User::find(Auth::id());
 
         if (!$user || !$user->current_cart_id) {
-            return response()->json(['message' => 'No current cart found'], 404);
+            return view('cart.show')->with('message', 'No current cart found');
         }
         
         $cart = Cart::find($user->current_cart_id);
-        return response()->json($cart);
+        return view('cart.show', compact('cart'));
     }
 
     public function store(): JsonResponse
@@ -201,16 +201,15 @@ class CartController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if ($user->balance < $cart->totalPrice) {
+        if ($user->balance < $cart->totalPrice()) {
             return response()->json(['message' => 'Not enough balance'], 401);
         }
 
-        $user->balance -= $cart->totalPrice;
+        $user->balance -= $cart->totalPrice();
         $user->save();
 
         $transaction = new Transaction();
         $transaction->cart_id = $cart->id;
-        $transaction->user_id = $user->id;
         $transaction->status = 'Pending';
         $transaction->save();
 
