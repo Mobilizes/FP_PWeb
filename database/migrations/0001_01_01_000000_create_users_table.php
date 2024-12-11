@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('password');
             $table->string('role')->default('user');
-            $table->integer('balance')->default(0);
+            $table->integer('balance')->default(10000000);
+            $table->string('current_cart_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
