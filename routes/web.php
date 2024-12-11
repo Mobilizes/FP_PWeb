@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
 Route::get('/', function () {
-    return view('homepage');
+    $products = Product::all();
+    return view('homepage', compact('products'));
 });
 
 Route::get('/blade-welcome', function () {

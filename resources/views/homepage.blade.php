@@ -6,70 +6,96 @@
     <title>Jual Beli Barang Bekas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
-<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body class="text-gray-800 bg-green-50">
     <!-- Navbar -->
-    <header class="text-white bg-green-700">
-        <div class="container flex items-center justify-between p-4 mx-auto">
+    <header class="text-white bg-green-700 fixed w-full z-50">
+        <div class="container flex items-center justify-between py-2 px-4 mx-auto">
             <div class="flex flex-row">
-            <x-application-logo class="w-8 h-8 text-gray-500 fill-current z-100" />
+            <x-application-logo class="w-8 h-7 text-gray-500 fill-current z-100" />
             <h1 class="text-xl font-bold ml-3">ecoswap</h1>
-        </div>
+            </div>
 
-            <nav>
-                <button id="menu-button" class="md:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-                <ul id="menu" class="hidden space-x-4 md:flex items-center">
-                    <li><a href="#home" class="hover:text-green-300">Home</a></li>
-                    <li><a href="#about" class="hover:text-green-300">About Us</a></li>
-                    <li><a href="#products" class="hover:text-green-300">Our Products</a></li>
-                    <li><a href="#testimonials" class="hover:text-green-300">Testimonials</a></li>
-                    @if (Route::has('login'))
+        <nav class="relative ">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="md:hidden">
+                        <button id="menu-button" class="focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                    <ul id="menu" class="hidden md:flex space-x-4 items-center">
+                        <li><a href="#home" class="hover:text-green-300 scroll-link">Home</a></li>
+                        <li><a href="#about" class="hover:text-green-300 scroll-link">About Us</a></li>
+                        <li><a href="#products" class="hover:text-green-300 scroll-link">Our Products</a></li>
+                        <li><a href="#testimonials" class="hover:text-green-300 scroll-link">Testimonials</a></li>
+                        @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="hover:text-green-300">
-                                    <li>Dashboard</li>
-                                </a>
+                                <li><a href="{{ url('/dashboard') }}" class="hover:text-green-300">Dashboard</a></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                            {{ __("Log out" )}}
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li><a href="{{ route('login') }}" class="hover:text-green-300 px-4 py-2 rounded-md bg-green-900">Log in</a></li>
+                                @if (Route::has('register'))
+                                    <li><a href="{{ route('register') }}" class="hover:text-green-300 px-4 py-2 rounded-md bg-green-800">Register</a></li>
+                                @endif
+                            @endauth
+                        @endif
+                    </ul>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden absolute top-0 right-0 bg-green-700 w-28 overflow-y-hidden max-w-xs px-4 py-2 shadow-lg z-50">
+                <ul class="space-y-4 flex flex-col justify-end overflow-hidden">
+                    <li><a href="#home" class="block hover:text-green-300 scroll-link">Home</a></li>
+                    <li><a href="#about" class="block hover:text-green-300 scroll-link">About Us</a></li>
+                    <li><a href="#products" class="block hover:text-green-300 scroll-link">Our Products</a></li>
+                    <li><a href="#testimonials" class="block hover:text-green-300 scroll-link">Testimonials</a></li>
+                    @if (Route::has('login'))
+                        @auth
+                            <li><a href="{{ url('/dashboard') }}" class="block hover:text-green-300">Dashboard</a></li>
+                            <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
-                                        {{ __("Log out" )}}
+                                    <button type="submit" class="w-full text-left px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                        {{ __("Log out") }}
                                     </button>
                                 </form>
-                            @else
-                                <a href="{{ route('login') }}" class="hover:text-green-300">
-                                    <li>Log in</li>
-                                </a>
-                                @if (Route::has('register'))
-                                    <li>
-                                        <a href="{{ route('register') }}" class="hover:text-green-300">
-                                            Register
-                                        </a>
-                                    </li>
-                                @endif
-                            @endauth 
-                        </li>
+                            </li>
+                        @else
+                            <li><a href="{{ route('login') }}" class="block hover:text-green-300">Log in</a></li>
+                            @if (Route::has('register'))
+                                <li><a href="{{ route('register') }}" class="block hover:text-green-300">Register</a></li>
+                            @endif
+                        @endauth
                     @endif
                 </ul>
-            </nav>
+            </div>
+            
+        </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="py-16 px-8 bg-green-100">
+    <section id="home" class="py-32 px-8 md:px-20 bg-green-100 animate__animated animate__fadeIn">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-8">
           <div>
-            <h2 class="text-4xl font-bold text-green-700">ECO SWAP</h2>
+            <h2 class="text-4xl font-bold text-green-700 justify-center flex md:justify-start">ECO SWAP</h2>
             <p class="mt-4 text-lg text-gray-700">
               Barangmu masih bagus namun tidak terpakai ? <br> di <span class="text-green-600 font-semibold">SWAP</span> aja.
             </p>
             <a
               href="#products"
-              class="inline-block px-6 py-3 mt-6 text-white bg-green-700 rounded hover:bg-green-800"
+              class="inline-block px-6 py-3 mt-6 text-white bg-green-700 rounded hover:bg-green-800 "
             >
               Explore Now
             </a>
@@ -80,21 +106,21 @@
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
                   <img
-                    src="https://via.placeholder.com/600x400?text=Gambar+1"
+                    src="/img/homepage/homepage1.jpg"
                     alt="Gambar 1"
                     class="w-full max-w-sm mx-auto rounded-lg"
                   />
                 </div>
                 <div class="swiper-slide">
                   <img
-                    src="https://via.placeholder.com/600x400?text=Gambar+2"
+                    src="/img/homepage/homepage2.jpg"
                     alt="Gambar 2"
                     class="w-full max-w-sm mx-auto rounded-lg"
                   />
                 </div>
                 <div class="swiper-slide">
                   <img
-                    src="https://via.placeholder.com/600x400?text=Gambar+3"
+                    src="/img/homepage/homepage3.png"
                     alt="Gambar 3"
                     class="w-full max-w-sm mx-auto rounded-lg"
                   />
@@ -110,13 +136,13 @@
         </div>
       </section>
       
-      
     <!-- About Us -->
-    <section id="about" class="py-16 bg-gray-100 px-6">
+    <section id="about" class="py-16 bg-gray-100 px-6 md:px-20 animate__animated animate__fadeInLeft">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div class="flex justify-center">
                 <img
-                  src="https://via.placeholder.com/400x300?text=Ilustrasi+About+Us"
+                src="/img/homepage/homepage4.jpeg"
+
                   alt="Ilustrasi Tentang Kami"
                   class="w-3/4 max-w-md rounded-lg shadow-lg"
                 />
@@ -140,31 +166,26 @@
       
 
     <!-- Our Products -->
-    <section id="products" class="py-16 bg-green-100">
+    <section id="products" class="py-16 bg-green-100 md:px-20 animate__animated animate__fadeInRight">
         <div class="container mx-auto text-center">
             <h3 class="text-3xl font-bold text-green-700">Our Products</h3>
             <div class="px-4 grid grid-cols-1 gap-8 mt-8 md:grid-cols-3">
+                @foreach ($products->take(6) as $product)
                 <div class="p-4 bg-white rounded shadow">
-                    <img src="https://via.placeholder.com/150" alt="Product 1" class="mx-auto mb-4">
-                    <h4 class="font-bold">Product 1</h4>
-                    <p class="text-gray-600">Deskripsi singkat barang.</p>
+                    <img src="{{ Storage::url($product->image_path) }}" 
+                         alt="{{ $product->name }}" 
+                         class="object-cover w-150 h-150 mx-auto rounded"
+                         style="width: 150px; height: 150px;">
+                    <h4 class="font-bold mt-4">{{ $product->name }}</h4>
+                    <p class="text-gray-600 mt-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 </div>
-                <div class="p-4 bg-white rounded shadow">
-                    <img src="https://via.placeholder.com/150" alt="Product 2" class="mx-auto mb-4">
-                    <h4 class="font-bold">Product 2</h4>
-                    <p class="text-gray-600">Deskripsi singkat barang.</p>
-                </div>
-                <div class="p-4 bg-white rounded shadow">
-                    <img src="https://via.placeholder.com/150" alt="Product 3" class="mx-auto mb-4">
-                    <h4 class="font-bold">Product 3</h4>
-                    <p class="text-gray-600">Deskripsi singkat barang.</p>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
 
     <!-- Testimonials -->
-    <section id="testimonials" class="py-16">
+    <section id="testimonials" class="py-16 md:px-20 animate__animated animate__fadeInUp">
         <div class="container mx-auto text-center">
             <h3 class="text-3xl font-bold text-green-700">Testimonials</h3>
             <div class="grid grid-cols-1 gap-8 mt-8 md:grid-cols-2">
@@ -189,20 +210,61 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 text-white bg-green-700">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 ecoswap. All rights reserved.</p>
-        </div>
-    </footer>
-
+    <footer class="py-8 text-white bg-green-700">
+      <div class="container mx-auto text-center space-y-4">
+          <!-- Logo and Name -->
+          <div>
+              <h1 class="text-xl font-bold">Ecoswap</h1>
+              <p class="text-sm">Connecting People, Nature, and Sustainability</p>
+          </div>
+          
+          <!-- Social Media Links -->
+          <div class="flex justify-center space-x-6">
+              <a href="#" target="#" class="hover:text-green-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.7.5.8.3 1.5.8 2.1 1.4.6.6 1.1 1.3 1.4 2.1.3.7.4 1.5.5 2.7.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.5 2.7-.3.8-.8 1.5-1.4 2.1-.6.6-1.3 1.1-2.1 1.4-.7.3-1.5.4-2.7.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.7-.5-.8-.3-1.5-.8-2.1-1.4-.6-.6-1.1-1.3-1.4-2.1-.3-.7-.4-1.5-.5-2.7-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-1.2.2-2 .5-2.7.3-.8.8-1.5 1.4-2.1.6-.6 1.3-1.1 2.1-1.4.7-.3 1.5-.4 2.7-.5C8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 5.9.1 4.8.3 3.9.7 2.9 1.1 2 1.8 1.2 2.6.4 3.4-.2 4.2-.7 5.2c-.4.9-.6 2-.7 3.2C-.5 9.4-.5 9.7-.5 12c0 2.3 0 2.6.1 3.8.1 1.2.3 2.3.7 3.2.4.9 1.1 1.8 1.9 2.6.8.8 1.7 1.4 2.7 1.8.9.4 2 .6 3.2.7 1.2.1 1.5.1 4.8.1 3.3 0 3.6 0 4.8-.1 1.2-.1 2.3-.3 3.2-.7.9-.4 1.8-1.1 2.6-1.9.8-.8 1.4-1.7 1.8-2.7.4-.9.6-2 .7-3.2.1-1.2.1-1.5.1-4.8 0-3.3 0-3.6-.1-4.8-.1-1.2-.3-2.3-.7-3.2-.4-.9-1.1-1.8-1.9-2.6-.8-.8-1.7-1.4-2.7-1.8-.9-.4-2-.6-3.2-.7-1.2-.1-1.5-.1-4.8-.1z"></path><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 1 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 1 1 0 8zm6.4-11.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 1 0 0-2.8z"></path>
+                  </svg>
+              </a>
+              <a href="https://wa.me/62895385905155" target="#" class="hover:text-green-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm6.7 16.5c-.3.8-1.7 1.5-2.3 1.5-1.3-.1-4.5-1.7-6.4-4.3C7.4 11.2 6.8 9.5 6.8 8.6c0-.8.5-1.7.9-1.9.3-.1.7-.1.9 0s.5.5.5.7c.1.3.3 1 .4 1.2.1.3.1.5-.1.8-.2.2-.5.7-.7.8-.2.2-.5.4-.2.7.6.9 1.6 2.1 3.5 3.1 1.6.9 2.2 1 2.6.9.4-.1 1-.9 1.2-1.2s.2-.7.3-.8.4-.2.7-.1c.2 0 1 .5 1.2.7.2.1.2.5 0 .9z"></path>
+                  </svg>
+              </a>
+              <a href="#" target="#" class="hover:text-green-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M22.7 0H1.3C.6 0 0 .6 0 1.3v21.4C0 23.4.6 24 1.3 24H12.8V14.8h-3.1v-3.5h3.1V8.6c0-3.1 1.8-4.9 4.6-4.9 1.3 0 2.6.1 2.9.1v3.4h-2c-1.6 0-2 .8-2 1.9v2.6h3.4l-.5 3.5h-2.9V24H22.7c.7 0 1.3-.6 1.3-1.3V1.3C24 .6 23.4 0 22.7 0z"></path>
+                  </svg>
+              </a>
+              <a href="#" class="hover:text-green-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.4 3H3.6C2.7 3 2 3.7 2 4.6V19.4C2 20.3 2.7 21 3.6 21H20.4C21.3 21 22 20.3 22 19.4V4.6C22 3.7 21.3 3 20.4 3zM20 6.7L12 12.5 4 6.7V5L12 10.3 20 5V6.7z"></path>
+                  </svg>
+              </a>
+          </div>
+  
+          <!-- Copyright -->
+          <p class="text-sm">&copy; 2024 Ecoswap. All rights reserved.</p>
+      </div>
+  </footer>
+  
     <script>
-        const menuButton = document.getElementById('menu-button');
-        const menu = document.getElementById('menu');
-
-        menuButton.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
+      const menu = document.getElementById('mobile-menu');
+      const button = document.getElementById('menu-button');
+    
+      button.addEventListener('click', () => menu.classList.toggle('hidden'));
+    
+      document.addEventListener('click', (event) => {
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
+          menu.classList.add('hidden');
+        }
+      });
+    
+      menu.querySelectorAll('a').forEach(link =>
+        link.addEventListener('click', () => menu.classList.add('hidden'))
+      );
     </script>
+    
+  
 </body>
 </html>
 
@@ -222,5 +284,18 @@
         clickable: true,
       },
     });
-  </script>
-  
+    document.querySelectorAll('.scroll-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const targetId = this.getAttribute('href').substring(1); 
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 50, 
+                    behavior: 'smooth' 
+                });
+            }
+        });
+    });
+</script>
