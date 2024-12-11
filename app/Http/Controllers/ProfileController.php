@@ -21,6 +21,18 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function edit2(Request $request): View
+    {
+        return view('dashboard2', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function showChangeProfile()
+{
+    return view('change-profile');
+}
+
     /**
      * Update the user's profile information.
      */

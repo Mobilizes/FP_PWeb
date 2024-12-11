@@ -2,13 +2,18 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
 Route::get('/', function () {
-    return view('homepage');
+    $products = Product::all();
+    return view('homepage', compact('products'));
+});
+
+Route::get('/product', function () {
+    $products = Product::all();
+    return view('product', compact('products'));
 });
 
 Route::get('/blade-welcome', function () {
@@ -19,9 +24,19 @@ Route::get('/auth/login', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard2', function () {
+    return view('dashboard.dashboard2');
 });
+
+
+Route::get('/change-profile', function () {
+    Route::get('/change-profile', [ProfileController::class, 'showChangeProfile'])->name('change-profile');
+    return view('change-profile');
+})->name('change-profile');
+
+Route::get('/change-profile', function () {
+    return view('change-profile');
+})->name('change-profile');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -46,9 +61,6 @@ Route::middleware('auth')->group(function () {
         return view('products.create', compact('products'));
     })->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-
-    Route::get('/transactions/buyer', [TransactionController::class, 'showBuyer'])->name('transactions.buyer');
-    Route::get('/transactions/seller', [TransactionController::class, 'showSeller'])->name('transactions.seller');
 });
 
 Route::get('/products', [ProductController::class, 'index']);
