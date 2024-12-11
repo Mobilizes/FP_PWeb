@@ -29,6 +29,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/transactions/buyer', [TransactionController::class, 'showBuyer'])->name('transactions.buyer');
     Route::get('/transactions/seller', [TransactionController::class, 'showSeller'])->name('transactions.seller');
+    Route::patch('/transactions/seller/{transaction}/approve', [TransactionController::class, 'sellerApprove'])->name('transactions.sellerApprove');
+    Route::patch('/transactions/seller/{transaction}/deny', [TransactionController::class, 'sellerDeny'])->name('transactions.sellerDeny');
+    
+    Route::delete('/transactions/delete/{transactionId}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 });
 
 Route::get('/products', [ProductController::class, 'index']);

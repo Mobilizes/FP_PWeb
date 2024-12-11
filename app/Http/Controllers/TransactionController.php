@@ -8,75 +8,30 @@ use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\View\View;
 
 class TransactionController extends Controller
 {
-    public function showBuyer(): JsonResponse
+    public function showBuyer(): View
     {
         $carts = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
-        $transactions = $carts->pluck('transaction')->filter();
+        $transactions = $carts->pluck('transaction')->where('status', '!=', 'Failed')->filter();
 
-        $response = $transactions->map(function ($transaction) {
-            $cart = Cart::find($transaction->cart_id);
-            $cart = $cart->products->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'quantity' => $product->pivot->quantity,
-                ];
-            });
-
-            return [
-                'id' => $transaction->id,
-                'status' => $transaction->status,
-                'cart' => $cart,
-                'created_at' => $transaction->created_at,
-                'updated_at' => $transaction->updated_at,
-            ];
-        });
-
-        return response()->json($response);
+        return view('transactions.buyer', compact('transactions'));
     }
 
-    public function showSeller(): JsonResponse
+    public function showSeller(): View
     {
         $transactions = Transaction::whereHas('cart.products', function ($query) {
             $query->where('seller_id', Auth::id());
-        })->get();
+        })->where('status', '!=', 'Failed')->get();
 
-        $response = $transactions->map(function ($transaction) {
-            $cart = Cart::find($transaction->cart_id);
-            $cart = $cart->products->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'quantity' => $product->pivot->quantity,
-                ];
-            });
-
-            return [
-                'id' => $transaction->id,
-                'status' => $transaction->status,
-                'cart' => $cart,
-                'created_at' => $transaction->created_at,
-                'updated_at' => $transaction->updated_at,
-            ];
-        });
-
-        return response()->json($response);
+        return view('transactions.seller', compact('transactions'));
     }
 
-    public function sellerInProgress(Request $request): JsonResponse
+    public function sellerApprove(Transaction $transaction): JsonResponse
     {
-        $validatedData = $request->validate([
-            'transaction_id' => 'required|integer',
-            'approve' => 'required|boolean',
-        ]);
-
         $user = User::find(Auth::id());
-        $transaction = Transaction::find($validatedData['transaction_id']);
         
         $sellers = $transaction->sellers;
         if (!$sellers->contains($user)) {
@@ -86,26 +41,6 @@ class TransactionController extends Controller
         $pivot = $transaction->sellers()->where('seller_id', $user->id)->first()->pivot;
         if ($pivot->approved) {
             return response()->json(['message' => 'Seller already approved this transaction'], 200);
-        }
-
-        if ($validatedData['approve'] === false) {
-            // Remove all products that are sold by seller from cart
-            $cart = $transaction->cart;
-            $products = $cart->products()->where('seller_id', $user->id)->get();
-            
-            foreach ($products as $product) {
-                $cart->products()->detach($product->id);
-            }
-            
-            // If the removal causes the cart to be empty, set the transaction status to 'Failed'
-            if ($cart->products()->count() === 0) {
-                $transaction->status = 'Failed';
-                $transaction->save();
-
-                return response()->json(['message' => 'Transaction set to Failed.'], 200);
-            }
-
-            return response()->json(['message' => 'Seller denied, deleted seller\'s products from transaction'], 200);
         }
 
         $pivot->approved = true;
@@ -120,6 +55,35 @@ class TransactionController extends Controller
         }
 
         return response()->json(['message' => 'Seller approved transaction'], 200);
+    }
+
+    public function sellerDeny(Transaction $transaction)
+    {
+        $user = User::find(Auth::id());
+
+        // Remove all products that are sold by seller from cart
+        $cart = $transaction->cart;
+        $products = $cart->products()->where('seller_id', $user->id)->get();
+        
+        foreach ($products as $product) {
+            $cart->products()->detach($product->id);
+            
+            $buyer = $cart->buyer;
+            $buyer->balance += $product->price * $product->quantity;
+            $buyer->save();
+        }
+        
+        // If the removal causes the cart to be empty, set the transaction status to 'Failed'
+        if ($cart->products()->count() === 0) {
+            $transaction->status = 'Failed';
+            $transaction->save();
+
+            $transaction->sellers()->detach($user->id);
+
+            return response()->json(['message' => 'Transaction set to Failed.'], 200);
+        }
+
+        return response()->json(['message' => 'Seller denied, deleted seller\'s products from transaction'], 200);
     }
 
     public function clientFinished(Request $request): JsonResponse
