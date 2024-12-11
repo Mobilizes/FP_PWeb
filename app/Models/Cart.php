@@ -33,7 +33,7 @@ class Cart extends Model
 
     public function totalPrice(): int
     {
-        $products = $this->products();
+        $products = $this->products;
         $total = 0;
 
         foreach ($products as $product) {

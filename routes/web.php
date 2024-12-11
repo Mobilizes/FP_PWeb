@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
@@ -70,6 +72,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/transactions/seller/{transaction}/deny', [TransactionController::class, 'sellerDeny'])->name('transactions.sellerDeny');
 
     Route::delete('/transactions/delete/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+
+    Route::get('/cart', [CartController::class, 'showCurrentCart'])->name('cart.show');
+    Route::post('/cart/{cart}/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 });
 
 Route::get('/products', [ProductController::class, 'index']);
