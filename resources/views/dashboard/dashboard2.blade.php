@@ -37,14 +37,27 @@
 <body class="bg-green-50 text-gray-800">
 
     <!-- Header -->
-    <header class="bg-green-700 text-white py-4">
-        <div class="container mx-auto flex justify-between px-4 items-center">
-            <h1 class="text-xl font-bold">ecoswap Dashboard</h1>
+    <header class="py-4 text-white bg-green-700">
+        <div class="container flex items-center justify-between px-4 mx-auto">
+            <div class='flex items-center gap-3 md:gap-5 max-h-10'>
+                <x-application-logo class="h-10"/>
+                <p class='font-bold'> EcoSwap</p>
+            </div>
+            {{-- <h1 class="text-xl font-bold">ecoswap Dashboard</h1> --}}
+            <div class='flex flex-row items-center h-auto gap-5'>
+                <a href="{{ route('product') }}">View Products</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
+                        {{ __("Log out" )}}
+                    </button>
+                </form>
+            </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto py-8 flex gap-4">
+    <main class="container mx-auto py-8 flex flex-col md:flex-row gap-4">
         <!-- Menu Section -->
         <section class="bg-white basis-1/5 rounded shadow-lg p-6">
             <div class="flex items-center gap-4 mb-6">
