@@ -15,16 +15,21 @@ class TransactionController extends Controller
     public function showBuyer(): View
     {
         $carts = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
-        $transactions = $carts->pluck('transaction')->where('status', '!=', 'Failed')->filter();
+        $inProgressTransactions = $carts->pluck('transaction')->where('status', '=', 'In Progress')->filter();
+        $pendingTransactions = $carts->pluck('transaction')->where('status', '=', 'Pending')->filter();
 
-        return view('transactions.buyer', compact('transactions'));
+        return view('transactions.buyer', compact('inProgressTransactions', 'pendingTransactions'));
     }
 
     public function showSeller(): View
     {
         $transactions = Transaction::whereHas('cart.products', function ($query) {
             $query->where('seller_id', Auth::id());
-        })->where('status', '!=', 'Failed')->get();
+        })
+        ->where('status', '=', 'Pending')
+        ->whereDoesntHave('sellers', function ($query) {
+            $query->where('seller_id', Auth::id())->where('approved', true);
+        })->get();
 
         return view('transactions.seller', compact('transactions'));
     }
@@ -72,13 +77,13 @@ class TransactionController extends Controller
             $buyer->balance += $product->price * $product->quantity;
             $buyer->save();
         }
+
+        $transaction->sellers()->detach($user->id);
         
         // If the removal causes the cart to be empty, set the transaction status to 'Failed'
         if ($cart->products()->count() === 0) {
             $transaction->status = 'Failed';
             $transaction->save();
-
-            $transaction->sellers()->detach($user->id);
 
             return response()->json(['message' => 'Transaction set to Failed.'], 200);
         }
@@ -86,14 +91,9 @@ class TransactionController extends Controller
         return response()->json(['message' => 'Seller denied, deleted seller\'s products from transaction'], 200);
     }
 
-    public function clientFinished(Request $request): JsonResponse
+    public function buyerConfirm(Transaction $transaction): JsonResponse
     {
-        $validatedData = $request->validate([
-            'transaction_id'=> 'required|integer',
-        ]);
-
         $user = User::find(Auth::id());
-        $transaction = Transaction::find($validatedData['transaction_id']);
 
         if (!$transaction->sellers->contains($user)) {
             return response()->json(['message' => 'Unauthorized'], 401);
@@ -113,17 +113,22 @@ class TransactionController extends Controller
         return response()->json(['message' => 'Transaction set to Finished.'], 200);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request): JsonResponse
     {
+        $id = $request->validate([
+            'transaction_id' => 'required|integer',
+        ])['transaction_id'];
+
         $transaction = Transaction::find($id);
+        
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
         $cart = Cart::find($transaction->cart_id);
 
         if ($cart->buyer_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        if ($transaction->status === 'Failed') {
-            $cart->buyer->balance += $cart->totalPrice;
         }
 
         $cart->delete();

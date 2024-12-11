@@ -156,7 +156,7 @@ class CartController extends Controller
     {
         // show all products in cart
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
 
         if (!$user->current_cart_id) {
             return response()->json(['message' => 'Cart does not exist'], 404);
