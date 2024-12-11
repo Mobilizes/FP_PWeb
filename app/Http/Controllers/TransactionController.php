@@ -44,11 +44,11 @@ class TransactionController extends Controller
         }
 
         $pivot->approved = true;
-        $transaction->save();
+        $pivot->save();
 
         $allApproved = $transaction->sellers()->wherePivot('approved', false)->count() === 0;
         if ($allApproved) {
-            $transaction->status = 'Pending';
+            $transaction->status = 'In Progress';
             $transaction->save();
 
             return response()->json(['message' => 'Transaction set to In Progress.'], 200);
