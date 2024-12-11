@@ -28,8 +28,7 @@ Route::get('/auth/login', function () {
 
 Route::get('/dashboard2', function () {
     return view('dashboard.dashboard2');
-});
-
+})->name('dashboard.dashboard2');
 
 Route::get('/change-profile', function () {
     Route::get('/change-profile', [ProfileController::class, 'showChangeProfile'])->name('change-profile');
@@ -44,18 +43,29 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/dashboard2', function () {
-    return view('dashboard2');
-})->middleware(['auth'])->name('dashboard2');
-
-Route::get('/cart', function () {
+Route::get('/cartt', function () {
     return view('cart');
-})->middleware(['auth', 'verified'] )->name('cart');
+})->middleware(['auth', 'verified'] )->name('cartt');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::get('/dashboard-profile', function () {
+        return view('dashboard.change-profile', [
+            'user' => Auth::user(),
+        ]);
+    })->name('dashboard.profile');
+
+    Route::get('/dashboard-sale', function () {
+        $products = Product::where('seller_id', Auth::id())->get();
+        return view('dashboard.product-for-sale', compact('products'));
+    })->name('dashboard.sale');
+
+    Route::get('/transactions', function () {
+        return view('dashboard.transactions');
+    })->name('transactions');
 
     Route::get('/products/create', function () {
         $products = Product::where('seller_id', operator: Auth::id())->get();
