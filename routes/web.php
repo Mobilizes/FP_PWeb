@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-to-cart', [CartController::class, 'storeAndAdd'])->name('cart.storeAndAdd');
     Route::get('/check-cart', [CartController::class, 'checkCart'])->name('cart.checkCart');
 });
-
+    
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/seller/{sellerId}', [ProductController::class, 'getBySellerId']);
 require __DIR__.'/auth.php';

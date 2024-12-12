@@ -107,8 +107,8 @@
                 const target = button.dataset.target;
                 if (target === 'profile') loadSection('{{ route('dashboard.profile') }}');
                 else if (target === 'product-sale') loadSection('{{ route('dashboard.sale') }}');
-                else if (target === 'sales-transactions') loadSection('{{ route('dashboard.sales-transactions') }}');
-                else if (target === 'purchase-transactions') loadSection('{{ route('dashboard.purchase-transactions') }}');
+                else if (target === 'sales-transactions') loadSection('{{ route('transactions.buyer') }}');
+                else if (target === 'purchase-transactions') loadSection('{{ route('transactions.seller') }}');
             });
         });
 

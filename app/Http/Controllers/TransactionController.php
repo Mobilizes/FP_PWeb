@@ -14,11 +14,10 @@ class TransactionController extends Controller
 {
     public function showBuyer(): View
     {
-        $carts = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
-        $inProgressTransactions = $carts->pluck('transaction')->where('status', '=', 'In Progress')->filter();
-        $pendingTransactions = $carts->pluck('transaction')->where('status', '=', 'Pending')->filter();
-
-        return view('transactions.buyer', compact('inProgressTransactions', 'pendingTransactions'));
+        $allTransactions = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
+        // $inProgressTransactions = $carts->pluck('transaction')->where('status', '=', 'In Progress')->filter();
+        // $pendingTransactions = $carts->pluck('transaction')->where('status', '=', 'Pending')->filter();
+        return view('dashboard.sales-transactions', compact('allTransactions'));
     }
 
     public function showSeller(): View
@@ -31,7 +30,11 @@ class TransactionController extends Controller
             $query->where('seller_id', Auth::id())->where('approved', true);
         })->get();
 
-        return view('transactions.seller', compact('transactions'));
+        if ($transactions->count() === 0) { // if no transactions
+            return view('dashboard.sales-transactions', compact('transactions'));
+        }
+
+        return view('dashboard.purchase-transactions', compact('transactions'));
     }
 
     public function sellerApprove(Transaction $transaction): JsonResponse
