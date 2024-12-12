@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Cart;
+use App\Models\Transaction;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -91,6 +92,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions/seller', [TransactionController::class, 'showSeller'])->name('transactions.seller');
     Route::patch('/transactions/seller/{transaction}/approve', [TransactionController::class, 'sellerApprove'])->name('transactions.sellerApprove');
     Route::patch('/transactions/seller/{transaction}/deny', [TransactionController::class, 'sellerDeny'])->name('transactions.sellerDeny');
+
+    Route::get('/example/transactions/buyer', function () {
+        $carts = Cart::where("buyer_id", '=', Auth::id())->with('transaction')->get();
+        $inProgressTransactions = $carts->pluck('transaction')->where('status', '=', 'In Progress')->filter();
+        $pendingTransactions = $carts->pluck('transaction')->where('status', '=', 'Pending')->filter();
+        return view('transactions.buyer', compact('inProgressTransactions', 'pendingTransactions'));
+    })->name('example.transactions.buyer');
+
+    Route::get('/example/transactions/seller', function () {
+        $transactions = Transaction::whereHas('cart.products', function ($query) {
+            $query->where('seller_id', Auth::id());
+        })
+        ->where('status', '=', 'Pending')
+        ->whereDoesntHave('sellers', function ($query) {
+            $query->where('seller_id', Auth::id())->where('approved', true);
+        })->get();
+
+        if ($transactions->count() === 0) { // if no transactions
+            return view('dashboard.sales-transactions', compact('transactions'));
+        }
+
+        return view('transactions.seller', compact('transactions'));
+    })->name('example.transactions.seller');
 
     Route::delete('/transactions/delete/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
