@@ -65,7 +65,8 @@
                 <button class="menu-btn" data-target="profile"> {{ __("Profile") }}</button>
                 <button class="menu-btn" data-target="product-sale">{{ __("Product For Sale") }}</button>
                 {{-- <button class="menu-btn" data-target="product-buy"> {{ __("Product But")}} </button> --}}
-                <button class="menu-btn" data-target="transactions">{{ __("Transactions") }}</button>
+                <button class="menu-btn" data-target="sales-transactions">{{ __("Sales Transactions") }}</button>
+                <button class="menu-btn" data-target="purchase-transactions">{{ __("Purchase Transactions") }}</button>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">
@@ -110,8 +111,12 @@
                 button.classList.add('active');
                 const target = button.dataset.target;
                 if (target === 'profile') loadSection('{{ route('dashboard.profile') }}');
-                else if (target === 'product-sale') loadSection('{{ route('dashboard.sale') }}');
-                else if (target === 'transactions') loadSection('{{ route('transactions') }}');
+                else if (target === 'sales-transaction') loadSection('{{ route('dashboard.sale') }}');
+                // else if (target === 'transactions') loadSection('{{ route('transactions') }}');
+
+                // =============== YANG INI GER =============
+                else if (target === 'sales-transactions') loadSection('{{ route('transactions') }}');
+                else if (target === 'purchase-transactions') loadSection('{{ route('transactions') }}');
             });
         });
 

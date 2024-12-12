@@ -30,11 +30,6 @@ $transactions = [
     <h2 class="text-2xl font-bold text-green-700 mb-4">Transactions</h2>
 
     <div class="flex gap-4 mb-6">
-        <button class="menu-btn" onclick="window.location.href='?type=sale'">Transaksi Penjualan</button>
-        <button class="menu-btn" onclick="window.location.href='?type=purchase'">Transaksi Pembelian</button>
-    </div>
-
-    <div class="flex gap-4 mb-6">
         <div>
             <label for="sort-field" class="block text-sm font-medium text-gray-700">Sort By:</label>
             <select id="sort-field" class="w-full rounded border-gray-300 shadow-sm">
