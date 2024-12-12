@@ -14,16 +14,16 @@
 </head>
 <body class="text-gray-800 bg-green-50">
     <!-- Navbar -->
-    <header class="text-white bg-green-700 fixed w-full z-50">
-        <div class="container flex items-center justify-between py-2 px-4 mx-auto">
+    <header class="fixed z-50 w-full text-white bg-green-700">
+        <div class="container flex items-center justify-between px-4 py-2 mx-auto">
             <div class="flex flex-row">
-            <x-application-logo class="w-8 h-7 text-gray-500 fill-current z-100" />
-            <h1 class="text-xl font-bold ml-3">ecoswap</h1>
+            <x-application-logo class="w-8 text-gray-500 fill-current h-7 z-100" />
+            <h1 class="ml-3 text-xl font-bold">ecoswap</h1>
             </div>
 
         <nav class="relative ">
-            <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center py-4">
+            <div class="container px-4 mx-auto">
+                <div class="flex items-center justify-between py-4">
                     <div class="md:hidden">
                         <button id="menu-button" class="focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,7 +31,7 @@
                             </svg>
                         </button>
                     </div>
-                    <ul id="menu" class="hidden md:flex space-x-4 items-center">
+                    <ul id="menu" class="items-center hidden space-x-4 md:flex">
                         <li><a href="#home" class="hover:text-green-300 scroll-link">Home</a></li>
                         <li><a href="#about" class="hover:text-green-300 scroll-link">About Us</a></li>
                         <li><a href="#products" class="hover:text-green-300 scroll-link">Our Products</a></li>
@@ -42,23 +42,23 @@
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                        <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">
                                             {{ __("Log out" )}}
                                         </button>
                                     </form>
                                 </li>
                             @else
-                                <li><a href="{{ route('login') }}" class="hover:text-green-300 px-4 py-2 rounded-md bg-green-900">Log in</a></li>
+                                <li><a href="{{ route('login') }}" class="px-4 py-2 bg-green-900 rounded-md hover:text-green-300">Log in</a></li>
                                 @if (Route::has('register'))
-                                    <li><a href="{{ route('register') }}" class="hover:text-green-300 px-4 py-2 rounded-md bg-green-800">Register</a></li>
+                                    <li><a href="{{ route('register') }}" class="px-4 py-2 bg-green-800 rounded-md hover:text-green-300">Register</a></li>
                                 @endif
                             @endauth
                         @endif
                     </ul>
                 </div>
             </div>
-            <div id="mobile-menu" class="hidden absolute top-0 right-0 bg-green-700 w-28 overflow-y-hidden max-w-xs px-4 py-2 shadow-lg z-50">
-                <ul class="space-y-4 flex flex-col justify-end overflow-hidden">
+            <div id="mobile-menu" class="absolute top-0 right-0 z-50 hidden max-w-xs px-4 py-2 overflow-y-hidden bg-green-700 shadow-lg w-28">
+                <ul class="flex flex-col justify-end space-y-4 overflow-hidden">
                     <li><a href="#home" class="block hover:text-green-300 scroll-link">Home</a></li>
                     <li><a href="#about" class="block hover:text-green-300 scroll-link">About Us</a></li>
                     <li><a href="#products" class="block hover:text-green-300 scroll-link">Our Products</a></li>
@@ -69,7 +69,7 @@
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                    <button type="submit" class="w-full px-4 py-2 text-left text-white bg-red-600 rounded hover:bg-red-700">
                                         {{ __("Log out") }}
                                     </button>
                                 </form>
@@ -89,12 +89,12 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="py-32 px-8 md:px-20 bg-green-100 animate__animated animate__fadeIn">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+    <section id="home" class="px-8 py-32 bg-green-100 md:px-20 animate__animated animate__fadeIn">
+        <div class="container grid items-center grid-cols-1 gap-8 mx-auto md:grid-cols-2">
           <div>
-            <h2 class="text-4xl font-bold text-green-700 justify-center flex md:justify-start">ECO SWAP</h2>
+            <h2 class="flex justify-center text-4xl font-bold text-green-700 md:justify-start">ECO SWAP</h2>
             <p class="mt-4 text-lg text-gray-700">
-              Barangmu masih bagus namun tidak terpakai ? <br> di <span class="text-green-600 font-semibold">SWAP</span> aja.
+              Barangmu masih bagus namun tidak terpakai ? <br> di <span class="font-semibold text-green-600">SWAP</span> aja.
             </p>
             <a
               href="#products"
@@ -130,8 +130,8 @@
                 </div>
               </div>
       
-              <div class="swiper-button-next text-green-700"></div>
-              <div class="swiper-button-prev text-green-700"></div>
+              <div class="text-green-700 swiper-button-next"></div>
+              <div class="text-green-700 swiper-button-prev"></div>
       
               <div class="swiper-pagination"></div>
             </div>
@@ -140,8 +140,8 @@
       </section>
       
     <!-- About Us -->
-    <section id="about" class="py-16 bg-gray-100 px-6 md:px-20 animate__animated animate__fadeInLeft">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <section id="about" class="px-6 py-16 bg-gray-100 md:px-20 animate__animated animate__fadeInLeft">
+        <div class="container grid items-center grid-cols-1 gap-8 mx-auto md:grid-cols-2">
             <div class="flex justify-center">
                 <img
                 src="/img/homepage/homepage4.jpeg"
@@ -152,13 +152,13 @@
               </div>
           <div>
             <h3 class="text-3xl font-bold text-green-700">About Us</h3>
-            <p class="mt-6 text-gray-700 leading-relaxed">
+            <p class="mt-6 leading-relaxed text-gray-700">
               Kami adalah platform yang bertujuan untuk mengurangi limbah dan 
               mendukung keberlanjutan dengan menyediakan tempat untuk jual beli barang bekas 
               yang masih layak pakai. Misi kami adalah menciptakan dampak positif bagi 
               lingkungan sekaligus memberikan peluang ekonomi bagi masyarakat.
             </p>
-            <p class="mt-4 text-gray-700 leading-relaxed">
+            <p class="mt-4 leading-relaxed text-gray-700">
               Dengan sistem yang mudah digunakan, Anda dapat menjual barang bekas 
               yang tidak lagi digunakan atau menemukan barang berkualitas dengan harga terjangkau. 
               Bergabunglah dengan kami dalam membangun masa depan yang lebih bersih dan hijau!
@@ -172,15 +172,15 @@
     <section id="products" class="py-16 bg-green-100 md:px-20 animate__animated animate__fadeInRight">
         <div class="container mx-auto text-center">
             <h3 class="text-3xl font-bold text-green-700">Our Products</h3>
-            <div class="px-4 grid grid-cols-1 gap-8 mt-8 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-8 px-4 mt-8 md:grid-cols-3">
                 @foreach ($products->take(6) as $product)
                 <div class="p-4 bg-white rounded shadow">
                     <img src="{{ Storage::url($product->image_path) }}" 
                          alt="{{ $product->name }}" 
-                         class="object-cover w-150 h-150 mx-auto rounded"
+                         class="object-cover mx-auto rounded w-150 h-150"
                          style="width: 150px; height: 150px;">
-                    <h4 class="font-bold mt-4">{{ $product->name }}</h4>
-                    <p class="text-gray-600 mt-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                    <h4 class="mt-4 font-bold">{{ $product->name }}</h4>
+                    <p class="mt-2 text-gray-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 </div>
                 @endforeach
             </div>
@@ -214,7 +214,7 @@
 
     <!-- Footer -->
     <footer class="py-8 text-white bg-green-700">
-      <div class="container mx-auto text-center space-y-4">
+      <div class="container mx-auto space-y-4 text-center">
           <!-- Logo and Name -->
           <div>
               <h1 class="text-xl font-bold">Ecoswap</h1>
@@ -223,7 +223,7 @@
           
           <!-- Social Media Links -->
           <div class="flex justify-center space-x-6">
-              <a href="#" target="#" class="hover:text-green-300">
+              <a href="https://www.instagram.com/its_campus/?hl=en" target="#" class="hover:text-green-300">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.7.5.8.3 1.5.8 2.1 1.4.6.6 1.1 1.3 1.4 2.1.3.7.4 1.5.5 2.7.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.5 2.7-.3.8-.8 1.5-1.4 2.1-.6.6-1.3 1.1-2.1 1.4-.7.3-1.5.4-2.7.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.7-.5-.8-.3-1.5-.8-2.1-1.4-.6-.6-1.1-1.3-1.4-2.1-.3-.7-.4-1.5-.5-2.7-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-1.2.2-2 .5-2.7.3-.8.8-1.5 1.4-2.1.6-.6 1.3-1.1 2.1-1.4.7-.3 1.5-.4 2.7-.5C8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 5.9.1 4.8.3 3.9.7 2.9 1.1 2 1.8 1.2 2.6.4 3.4-.2 4.2-.7 5.2c-.4.9-.6 2-.7 3.2C-.5 9.4-.5 9.7-.5 12c0 2.3 0 2.6.1 3.8.1 1.2.3 2.3.7 3.2.4.9 1.1 1.8 1.9 2.6.8.8 1.7 1.4 2.7 1.8.9.4 2 .6 3.2.7 1.2.1 1.5.1 4.8.1 3.3 0 3.6 0 4.8-.1 1.2-.1 2.3-.3 3.2-.7.9-.4 1.8-1.1 2.6-1.9.8-.8 1.4-1.7 1.8-2.7.4-.9.6-2 .7-3.2.1-1.2.1-1.5.1-4.8 0-3.3 0-3.6-.1-4.8-.1-1.2-.3-2.3-.7-3.2-.4-.9-1.1-1.8-1.9-2.6-.8-.8-1.7-1.4-2.7-1.8-.9-.4-2-.6-3.2-.7-1.2-.1-1.5-.1-4.8-.1z"></path><path d="M12 5.8A6.2 6.2 0 1 0 12 18.2 6.2 6.2 0 1 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 1 1 0 8zm6.4-11.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 1 0 0-2.8z"></path>
                   </svg>

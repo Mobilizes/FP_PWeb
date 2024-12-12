@@ -83,7 +83,7 @@
             
             <div class="flex items-center justify-between mt-8">
                 <h3 class="text-xl font-bold text-green-700">Total: Rp <span id="total-price"><?= number_format($total, 0, ',', '.') ?></span></h3>
-                <button class="btn btn-primary px-6 py-3 text-white bg-green-700 rounded hover:bg-green-800" onclick="checkout()">Checkout</button>
+                <button class="px-6 py-3 text-white bg-green-700 rounded btn btn-primary hover:bg-green-800" onclick="checkout()">Checkout</button>
             </div>
             <?php else: ?>
                 <p class="text-center text-gray-600">Your cart is empty. <a href="products.php" class="font-bold text-green-700">Shop now!</a></p>
@@ -196,7 +196,7 @@
                 alert('Not enough balance');
             } else if (data.message === 'Checkout successful') {
                 alert('Checkout successful');
-                window.location.href = "{{ route('dashboard.dashboard2') }}";
+                window.location.href = "{{ route('dashboard') }}";
             }
         })
         .catch(error => console.error('Error:', error));

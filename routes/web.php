@@ -27,10 +27,6 @@ Route::get('/auth/login', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard2', function () {
-    return view('dashboard.dashboard2');
-})->name('dashboard.dashboard2');
-
 Route::get('/purchasetest', function () {
     return view('purchasetest');
 })->name('purchasetest');

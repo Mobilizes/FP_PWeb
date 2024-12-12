@@ -38,8 +38,8 @@
     <h2 class="mt-8 mb-4 text-2xl font-bold text-green-700">Reset Password</h2>
      <form id="profile-form" class="space-y-4">
         <div><label class="block mb-2 font-bold">Current Password</label><input type="text" value="" class="w-full p-2 border rounded"></div>
-        <div><label class="block mb-2 font-bold">New Password/label><input type="text" value="" class="w-full p-2 border rounded"></div>
-        <div><label class="block mb-2 font-bold">Confirm Password/label><input type="text" value="" class="w-full p-2 border rounded"></div>
+        <div><label class="block mb-2 font-bold">New Password<input type="text" value="" class="w-full p-2 border rounded"></div>
+        <div><label class="block mb-2 font-bold">Confirm Password<input type="text" value="" class="w-full p-2 border rounded"></div>
         <button type="button" class="px-4 py-2 mt-4 text-white bg-green-700 rounded hover:bg-green-800" onclick="showModal('Save Profile Changes?')">Change Password</button>
     </form>
 </x-app-layout>
