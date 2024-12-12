@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jual Beli Barang Bekas</title>
+    <title>EcoSwap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
@@ -93,7 +93,7 @@
         <div class="container grid items-center grid-cols-1 gap-8 mx-auto md:grid-cols-2">
           <div>
             <h2 class="flex justify-center text-4xl font-bold text-green-700 md:justify-start">ECO SWAP</h2>
-            <p class="mt-4 text-lg text-gray-700">
+            <p class="justify-center mt-4 text-lg text-gray-700 md:justify-normal">
               Barangmu masih bagus namun tidak terpakai ? <br> di <span class="font-semibold text-green-600">SWAP</span> aja.
             </p>
             <a
@@ -233,12 +233,12 @@
                       <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm6.7 16.5c-.3.8-1.7 1.5-2.3 1.5-1.3-.1-4.5-1.7-6.4-4.3C7.4 11.2 6.8 9.5 6.8 8.6c0-.8.5-1.7.9-1.9.3-.1.7-.1.9 0s.5.5.5.7c.1.3.3 1 .4 1.2.1.3.1.5-.1.8-.2.2-.5.7-.7.8-.2.2-.5.4-.2.7.6.9 1.6 2.1 3.5 3.1 1.6.9 2.2 1 2.6.9.4-.1 1-.9 1.2-1.2s.2-.7.3-.8.4-.2.7-.1c.2 0 1 .5 1.2.7.2.1.2.5 0 .9z"></path>
                   </svg>
               </a>
-              <a href="#" target="#" class="hover:text-green-300">
+              <a href="https://www.facebook.com/InstitutTeknologiSepuluhNopember/" target="#" class="hover:text-green-300">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M22.7 0H1.3C.6 0 0 .6 0 1.3v21.4C0 23.4.6 24 1.3 24H12.8V14.8h-3.1v-3.5h3.1V8.6c0-3.1 1.8-4.9 4.6-4.9 1.3 0 2.6.1 2.9.1v3.4h-2c-1.6 0-2 .8-2 1.9v2.6h3.4l-.5 3.5h-2.9V24H22.7c.7 0 1.3-.6 1.3-1.3V1.3C24 .6 23.4 0 22.7 0z"></path>
                   </svg>
               </a>
-              <a href="#" class="hover:text-green-300">
+              <a href="mailto:gerrynicholas76@gmail.com" class="hover:text-green-300">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.4 3H3.6C2.7 3 2 3.7 2 4.6V19.4C2 20.3 2.7 21 3.6 21H20.4C21.3 21 22 20.3 22 19.4V4.6C22 3.7 21.3 3 20.4 3zM20 6.7L12 12.5 4 6.7V5L12 10.3 20 5V6.7z"></path>
                   </svg>

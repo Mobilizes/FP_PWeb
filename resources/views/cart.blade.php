@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>EcoSwap Cart</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="text-gray-800 bg-green-50">
