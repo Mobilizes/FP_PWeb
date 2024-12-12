@@ -68,9 +68,5 @@ Route::middleware('auth')->group(function () {
         $products = Product::all();
     return view('product', compact('products'));
         // return view('product');
-    })->name('product');
-
-    Route::get('/cart', function () {
-        return view('cart');
-    })->name('cart');   
+    })->name('product');   
 });

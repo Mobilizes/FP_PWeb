@@ -50,7 +50,7 @@
                 >
                     <img src="{{ Storage::url($product->image_path) }}" 
                         alt="{{ $product->name }}" 
-                        class="object-cover w-150 h-150 mx-auto rounded"
+                        class="object-cover mx-auto rounded w-150 h-150"
                         style="width: 150px; height: 150px;">
                     <h3 class="text-lg font-bold">{{ $product->name }}</h3>
                     <p class="text-gray-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
@@ -79,12 +79,13 @@
                     id="modal-image"
                     src="" 
                     alt="" 
-                    class="object-cover w-150 h-150 mx-auto rounded"
+                    class="object-cover mx-auto rounded w-150 h-150"
                     style="width: 320px; height: 320px;">
                 <p id="modal-description" class="mb-4 text-gray-700"></p>
                 <p id="modal-stock" class="text-sm text-gray-500">Stock: <span></span></p>
 
-                <form id="add-to-cart-form" onsubmit="addToCart(); return false;" class="mt-4">
+                <form id="add-to-cart-form" action="{{ route('cart.storeAndAdd')}}" method="POST" onsubmit="submitAddToCartForm(event)" class="mt-4">
+                    @csrf
                     <input type="hidden" id="modal-product-id">
                     <div class="mb-4">
                         <label for="quantity" class="block text-gray-700">Quantity</label>
@@ -101,6 +102,29 @@
     <script>
         let cartCount = 0;
 
+        document.addEventListener('DOMContentLoaded', () => {
+            checkCartStatus();
+        });
+
+        function checkCartStatus() {
+            fetch('{{ route('cart.checkCart') }}', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.hasCart) {
+                    cartCount = data.productCount;
+                    console.log(data.productCount);
+                    showCartIcon();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
         function openModal(product) {
             document.getElementById('modal-title').textContent = product.name;
             document.getElementById('modal-image').src = product.image; 
@@ -115,18 +139,40 @@
             document.getElementById('product-modal').classList.add('hidden');
         }
 
-        function addToCart() {
-            cartCount++;
+        function submitAddToCartForm(event) {
+            event.preventDefault();
+
+            const productId = document.getElementById('modal-product-id').value;
+            const quantity = document.getElementById('quantity').value;
+
+            fetch('{{ route('cart.storeAndAdd') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                cartCount++;
+                closeModal();
+                showCartIcon();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function showCartIcon() {
             const cartIcon = document.getElementById('cart-icon');
             const cartCountSpan = document.getElementById('cart-count');
             cartCountSpan.textContent = cartCount;
             cartIcon.classList.remove('hidden');
-            closeModal();
         }
-
-        function goToCart() {
-            window.location.href = '{{ route('cart') }}';
-        }
+        
 
         function filterProducts() {
             const searchValue = document.getElementById('search-input').value.toLowerCase();
@@ -139,6 +185,10 @@
                     card.classList.add('hidden');
                 }
             });
+        }
+
+        function goToCart() {
+            window.location.href = '{{ route('cart.show') }}';
         }
     </script>
 </body>

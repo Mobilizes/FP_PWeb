@@ -18,6 +18,50 @@ class CartController extends Controller
         return response()->json($carts);
     }
 
+    public function storeAndAdd(Request $request): JsonResponse
+    {
+        // validate request data
+        $data = $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer'
+        ]);
+
+        $user = User::find(Auth::id());
+
+        // create new cart if it doesn't exist for the current user
+        if (!$user->current_cart_id) {
+            $cart = new Cart();
+            $cart->buyer_id = $user->id;
+            $cart->save();
+
+            $user->current_cart_id = $cart->id;
+            $user->save();
+        } else {
+            $cart = Cart::find($user->current_cart_id);
+        }
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        $existingProduct = $cart->products()->where('product_id', $data['product_id'])->first();
+        if ($existingProduct && $existingProduct->seller_id === $user->id) {
+            return response()->json(['message' => 'Cannot buy your own product'], 404);
+        }
+
+        if ($existingProduct) {
+            $cart->products()->updateExistingPivot($data['product_id'], [
+                'quantity' => $existingProduct->pivot->quantity + $data['quantity']
+            ]);
+        } else if ($data['quantity'] > 0) {
+            $cart->products()->attach($data['product_id'], ['quantity' => $data['quantity']]);
+        } else {
+            return response()->json(['message' => 'Product has invalid quantity'], 404);
+        }
+
+        return response()->json(['message' => 'Product added to cart'], 200);
+    }
+
     public function showCurrentCart()
     {
         $user = User::find(Auth::id());
@@ -28,26 +72,6 @@ class CartController extends Controller
         
         $cart = Cart::find($user->current_cart_id);
         return view('cart.show', compact('cart'));
-    }
-
-    public function store(): JsonResponse
-    {
-        // create new cart if it doesnt exist in the current user
-
-        $user = User::find(Auth::id());
-
-        if (!$user->current_cart_id) {
-            $cart = new Cart();
-            $cart->user_id = $user->id;
-            $cart->save();
-
-            $user->current_cart_id = $cart->id;
-            $user->save();
-
-            return response()->json(['message' => 'Cart created'], 201);
-        }
-
-        return response()->json(['message' => 'Cart already exists'], 201);
     }
 
     public function destroy(): JsonResponse
@@ -72,44 +96,6 @@ class CartController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Cart deleted'], 201);
-    }
-
-    public function add(Request $request): JsonResponse
-    {
-        // add new product to cart
-
-        $data = $request->validate([
-            'product_id' => 'required|integer',
-            'quantity' => 'required|integer'
-        ]);
-
-        $user = User::find(Auth::id());
-
-        if (!$user->current_cart_id) {
-            return response()->json(['message' => 'User does not have a current cart'], 404);
-        }
-
-        $cart = Cart::find($user->current_cart_id);
-        if (!$cart) {
-            return response()->json(['message'=> 'Cart does not exist'], 404);
-        }
-
-        $existingProduct = $cart->products()->where('product_id', $data['product_id'])->first();
-        if ($existingProduct->seller_id === $user->id) {
-            return response()->json(['message'=> 'Cannot buy your own product'], 404);
-        }
-
-        if ($existingProduct) {
-            $cart->products()->updateExistingPivot($data['product_id'], [
-                'quantity' => $existingProduct->pivot->quantity + $data['quantity']
-            ]);
-        } else if ($data['quantity'] > 0) {
-            $cart->products()->attach($data['product_id'], ['quantity' => $data['quantity']]);
-        } else {
-            return response()->json(['message'=> 'Product has invalid quantity'], 404);
-        }
-
-        return response()->json(['message'=> 'Product added to cart'], 200);
     }
 
     public function update(Request $request): JsonResponse
@@ -194,6 +180,9 @@ class CartController extends Controller
 
     public function checkout(int $id): JsonResponse
     {
+        /*
+         * Buy all products in cart.
+        */ 
         $cart = Cart::find($id);
         $user = $cart->buyer;
 
@@ -217,5 +206,13 @@ class CartController extends Controller
         $cart->save();
 
         return response()->json($transaction);
+    }
+
+    public function checkCart(): JsonResponse {
+        $user = Auth::user();
+        $hasCart = $user && $user->current_cart_id ? true : false;
+        $cart = Cart::find($user->current_cart_id);
+        $productCount = $hasCart ? $cart->products()->count() : 0;
+        return response()->json(['hasCart' => $hasCart, 'productCount' => $productCount]);
     }
 }

@@ -47,9 +47,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+// TEMPORARY ROUTES
 Route::get('/cartt', function () {
     return view('cart');
-})->middleware(['auth', 'verified'] )->name('cartt');
+})->name('cart');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -97,6 +98,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cart', [CartController::class, 'showCurrentCart'])->name('cart.show');
     Route::post('/cart/{cart}/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/add-to-cart', [CartController::class, 'storeAndAdd'])->name('cart.storeAndAdd');
+    Route::get('/check-cart', [CartController::class, 'checkCart'])->name('cart.checkCart');
 });
 
 Route::get('/products', [ProductController::class, 'index']);

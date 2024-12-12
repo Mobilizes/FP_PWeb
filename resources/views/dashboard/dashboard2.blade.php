@@ -92,7 +92,7 @@
             const html = await response.text();
             mainContent.innerHTML = html;
 
-            initializeModal();
+                initializeModal();
         }
 
         const menuButtons = document.querySelectorAll('.menu-btn');
