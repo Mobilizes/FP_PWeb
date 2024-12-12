@@ -64,14 +64,14 @@
                 <x-text-input id="image" class="block w-full mt-1" type="file" name="image" />
                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
-            <div class="flex justify-between">
-                <button 
+            <div class="flex justify-end">
+                {{-- <button 
                     type="button" 
                     class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
                     id="close-upload-modal"
                 >
                     Cancel
-                </button>
+                </button> --}}
                 <button 
                     type="submit" 
                     class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800"
