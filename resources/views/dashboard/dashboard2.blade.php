@@ -112,11 +112,10 @@
                 const target = button.dataset.target;
                 if (target === 'profile') loadSection('{{ route('dashboard.profile') }}');
                 else if (target === 'sales-transaction') loadSection('{{ route('dashboard.sale') }}');
-                // else if (target === 'transactions') loadSection('{{ route('transactions') }}');
 
                 // =============== YANG INI GER =============
-                else if (target === 'sales-transactions') loadSection('{{ route('transactions') }}');
-                else if (target === 'purchase-transactions') loadSection('{{ route('transactions') }}');
+                else if (target === 'sales-transactions') loadSection('{{ route('dashboard.sales-transactions') }}');
+                else if (target === 'purchase-transactions') loadSection('{{ route('dashboard.purchase-transactions') }}');
             });
         });
 

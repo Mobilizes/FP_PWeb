@@ -63,9 +63,17 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.product-for-sale', compact('products'));
     })->name('dashboard.sale');
 
-    Route::get('/transactions', function () {
-        return view('dashboard.transactions');
-    })->name('transactions');
+    // Route::get('/transactions', function () {
+    //     return view('dashboard.transactions');
+    // })->name('transactions');
+
+    Route::Get('/sales-transactions', function () {
+        return view('dashboard.sales-transactions');
+    })->name('dashboard.sales-transactions');
+
+    Route::Get('/purchase-transactions', function () {
+        return view('dashboard.purchase-transactions');
+    })->name('dashboard.purchase-transactions');
 
     Route::get('/products/create', function () {
         $products = Product::where('seller_id', operator: Auth::id())->get();
