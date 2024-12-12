@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class CartController extends Controller
 {
@@ -66,12 +67,12 @@ class CartController extends Controller
     {
         $user = User::find(Auth::id());
 
-        if (!$user || !$user->current_cart_id) {
-            return view('cart.show')->with('message', 'No current cart found');
-        }
+        // if (!$user || !$user->current_cart_id) {
+        //     return view('cart')->with('message', 'No current cart found');
+        // }
         
         $cart = Cart::find($user->current_cart_id);
-        return view('cart.show', compact('cart'));
+        return view('cart', compact('cart'));
     }
 
     public function destroy(): JsonResponse
@@ -104,7 +105,7 @@ class CartController extends Controller
 
         $data = $request->validate([
             'product_id' => 'required|integer',
-            'quantity' => 'required|integer'
+            'quantity' => 'required|integer|min:0'
         ]);
 
         $user = User::find(Auth::id());
@@ -123,32 +124,63 @@ class CartController extends Controller
             return response()->json(['message'=> 'Cart cannot be modified, because it has ongoing transaction'], 404);
         }
 
-        $pivot = $cart->pivot->where('product_id', $data['product_id'])->first();
+        $existingProduct = $cart->products()->where('product_id', $data['product_id'])->first();
 
-        if (!$pivot) {
-            return response()->json(['message' => 'Cart does not have the requested product'], 404);
-        }
-
-        if ($data['quantity'] === 0) {
-            // if its the last product in cart, remove the cart
-            // otherwise, just remove the product from cart
-            if ($cart->products->count() === 1) {
-                $cart->delete();
-                $user->current_cart_id = null;
-                $user->save();
-
-                return response()->json(['message' => 'Cart removed because there is no products left'], 200);
+        if ($existingProduct) {
+            if ($data['quantity'] < 1) {
+                $cart->products()->detach($data['product_id']);
+                return response()->json(['message' => 'Product removed from cart'], 200);
+            } else {
+                $cart->products()->updateExistingPivot($data['product_id'], [
+                    'quantity' => $data['quantity']
+                ]);
+                return response()->json(['message' => 'Cart updated', 'quantity' => $data['quantity']], 200);
             }
-
-            $cart->products()->detach($data['product_id']);
-
-            return response()->json(['message' => 'Product removed from cart'], 200);
+        } else {
+            return response()->json(['message'=> 'Product not found in cart'], 404);
         }
 
-        $pivot->quantity = $data['quantity'];
+        // $pivot = $cart->pivot->where('product_id', $data['product_id'])->first();
+
+        // if (!$pivot) {
+        //     return response()->json(['message' => 'Cart does not have the requested product'], 404);
+        // }
+
+        // if ($data['quantity'] === 0) {
+        //     // if its the last product in cart, remove the cart
+        //     // otherwise, just remove the product from cart
+        //     if ($cart->products->count() === 1) {
+        //         $cart->delete();
+        //         $user->current_cart_id = null;
+        //         $user->save();
+
+        //         return response()->json(['message' => 'Cart removed because there is no products left'], 200);
+        //     }
+
+        //     $cart->products()->detach($data['product_id']);
+
+        //     return response()->json(['message' => 'Product removed from cart'], 200);
+        // }
+
+        // $pivot->quantity = $data['quantity'];
 
         return response()->json(['message' => 'Cart updated'], 200);
     }
+
+    public function updateQuantity(Request $request)
+{
+    $cart = Cart::find($request->cart_id);
+    $item = $cart->items()->where('product_id', $request->product_id)->first();
+
+    if ($item) {
+        $item->pivot->quantity += $request->quantity_change;
+        $item->pivot->save();
+    }
+
+    return response()->json(['quantity' => $item->pivot->quantity]);
+}
+
+
 
     public function show(): JsonResponse
     {
@@ -178,7 +210,7 @@ class CartController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function checkout(int $id): JsonResponse
+    public function checkout(int $id)
     {
         /*
          * Buy all products in cart.
@@ -194,6 +226,12 @@ class CartController extends Controller
             return response()->json(['message' => 'Not enough balance'], 401);
         }
 
+        if ($user->balance < $cart->totalPrice()) {
+            return redirect()->back()->with('error', 'Not enough balance');
+
+        }
+        
+
         $user->balance -= $cart->totalPrice();
         $user->save();
 
@@ -205,7 +243,9 @@ class CartController extends Controller
         $cart->transaction_id = $transaction->id;
         $cart->save();
 
-        return response()->json($transaction);
+        return redirect()->route('dashboard.dashboard2');
+        
+        // return response()->json($transaction);
     }
 
     public function checkCart(): JsonResponse {
