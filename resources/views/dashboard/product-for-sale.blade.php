@@ -17,7 +17,8 @@
                         image: '{{ Storage::url($product->image_path) }}'
                     })"
                 >
-                    <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="mx-auto mb-4">
+                    <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="mx-auto mb-4"
+                    style="width: 150px; height: 150px;">
                     <h3 class="text-lg font-bold">{{ $product->name }}</h3>
                     <p class="text-gray-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                     <p class="text-gray-600"> Stock {{ number_format($product->stock, 0, ',', '.') }}</p>
@@ -25,4 +26,6 @@
             @endforeach
         </div>
     </div>
+
+
 </x-app-layout>
