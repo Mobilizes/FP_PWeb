@@ -7,6 +7,7 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\Cart;
 
 Route::get('/', function () {
     $products = Product::all();
@@ -47,10 +48,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-// TEMPORARY ROUTES
-Route::get('/cartt', function () {
-    return view('cart');
-})->name('cart');
+// Route::get('/cart', function () {
+//     $cart = Cart::all();
+//     return view('cart', compact('cart'));
+//     // return view('cart');
+// })->middleware(['auth', 'verified'] )->name('cart');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -97,9 +99,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/transactions/delete/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
     Route::get('/cart', [CartController::class, 'showCurrentCart'])->name('cart.show');
+
+
     Route::post('/cart/{cart}/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/add-to-cart', [CartController::class, 'storeAndAdd'])->name('cart.storeAndAdd');
     Route::get('/check-cart', [CartController::class, 'checkCart'])->name('cart.checkCart');
+    Route::post('/cart/{cart}/update', [CartController::class, 'update'])->name('cart.update');
+    // Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
 });
 
 Route::get('/products', [ProductController::class, 'index']);
