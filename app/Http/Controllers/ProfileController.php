@@ -21,6 +21,11 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function showChangeProfile()
+{
+    return view('change-profile');
+}
+
     /**
      * Update the user's profile information.
      */
@@ -30,7 +35,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('dashboard.dashboard2')->with('status', 'profile-updated');
     }
 
     /**
@@ -52,5 +57,12 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /*
+     * Format the user's balance into Rupiahs.
+     */
+    public static function formatBalance($balance): string {
+        return 'Rp' . number_format($balance, 0, ',', '.') . ',00';
     }
 }

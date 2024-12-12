@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,12 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
-    public function store(Request $request): JsonResponse
+    public function create() {
+        $products = Product::where('seller_id', Auth::id())->get();
+        return view('products.create', compact('products'));
+    }
+
+    public function store(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -37,7 +43,7 @@ class ProductController extends Controller
 
         $product = Product::create($validatedData);
 
-        return response()->json($product, 201);
+        return redirect()->route('dashboard');
     }
 
     public function destroy(Request $request): JsonResponse
