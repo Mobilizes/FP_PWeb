@@ -22,6 +22,10 @@
             background: #047857; 
             color: white;
         }
+        .selected {
+        border: 3px solid black; 
+        background-color: #e6ffe6;  
+    }
     </style>
 </head>
 <body class="flex flex-col min-h-screen text-gray-800 bg-green-50">
@@ -131,12 +135,27 @@
                 });
             });
 
-            document.querySelectorAll('.status-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const selectedStatus = option.getAttribute('data-status');
-                    saveButton.setAttribute('data-selected-status', selectedStatus);
-                });
-            });
+            document.querySelectorAll('.status-btn').forEach(button => {
+        const status = button.getAttribute('data-status');
+        button.classList.add(statusColors[status]);
+
+        button.addEventListener('click', function(event) {
+            currentTransactionIndex = event.target.getAttribute('data-index');
+            modal.classList.remove('hidden');
+        });
+    });
+
+    document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Hapus kelas 'selected' dari semua opsi
+            document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
+            // Tambahkan kelas 'selected' ke opsi yang diklik
+            option.classList.add('selected');
+            const selectedStatus = option.getAttribute('data-status');
+            saveButton.setAttribute('data-selected-status', selectedStatus);
+        });
+    });
+
 
             cancelButton.addEventListener('click', () => {
                 modal.classList.add('hidden');
@@ -144,6 +163,7 @@
 
             saveButton.addEventListener('click', () => {
                 const selectedStatus = saveButton.getAttribute('data-selected-status');
+
                 if (currentTransactionIndex !== null && selectedStatus) {
                     const statusButton = document.querySelector(`.transaction-card[data-index="${currentTransactionIndex}"] .status-btn`);
 
@@ -153,6 +173,8 @@
                     statusButton.classList.add(statusColors[selectedStatus]);
 
                     modal.classList.add('hidden');
+                    console.log('Status updated');
+                    console.log('Selected status:', selectedStatus);
                 }
             });
         }
