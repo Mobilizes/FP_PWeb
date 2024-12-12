@@ -111,29 +111,27 @@
                 button.classList.add('active');
                 const target = button.dataset.target;
                 if (target === 'profile') loadSection('{{ route('dashboard.profile') }}');
-                else if (target === 'sales-transaction') loadSection('{{ route('dashboard.sale') }}');
-
-                // =============== YANG INI GER =============
+                else if (target === 'product-sale') loadSection('{{ route('dashboard.sale') }}');
                 else if (target === 'sales-transactions') loadSection('{{ route('dashboard.sales-transactions') }}');
                 else if (target === 'purchase-transactions') loadSection('{{ route('dashboard.purchase-transactions') }}');
             });
         });
 
-        function showModal(title, content = '') {
-            modalContent.innerHTML = `
-                <h3 class="mb-4 text-xl font-bold text-green-700">${title}</h3>
-                ${content}
-                <div class="flex justify-end gap-4 mt-4">
-                    <button class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700" onclick="closeModal()">Cancel</button>
-                    <button class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800">Confirm</button>
-                </div>
-            `;
-            modalContainer.classList.remove('hidden');
-        }
+        // function showModal(title, content = '') {
+        //     modalContent.innerHTML = `
+        //         <h3 class="mb-4 text-xl font-bold text-green-700">${title}</h3>
+        //         ${content}
+        //         <div class="flex justify-end gap-4 mt-4">
+        //             <button class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700" onclick="closeModal()">Cancel</button>
+        //             <button class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800">Confirm</button>
+        //         </div>
+        //     `;
+        //     modalContainer.classList.remove('hidden');
+        // }
 
-        function closeModal() {
-            modalContainer.classList.add('hidden');
-        }
+        // function closeModal() {
+        //     modalContainer.classList.add('hidden');
+        // }
     </script>
 </body>
 </html>

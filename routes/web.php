@@ -30,6 +30,10 @@ Route::get('/dashboard2', function () {
     return view('dashboard.dashboard2');
 })->name('dashboard.dashboard2');
 
+Route::get('/purchasetest', function () {
+    return view('purchasetest');
+})->name('purchasetest');
+
 Route::get('/change-profile', function () {
     Route::get('/change-profile', [ProfileController::class, 'showChangeProfile'])->name('change-profile');
     return view('change-profile');
