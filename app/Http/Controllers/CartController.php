@@ -222,13 +222,16 @@ class CartController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        if ($cart->products->count() == 0) {
+            return response()->json(['message' => 'Cart is empty'], 401);
+        }
+
         if ($user->balance < $cart->totalPrice()) {
             return response()->json(['message' => 'Not enough balance'], 401);
         }
 
-        if ($user->balance < $cart->totalPrice()) {
-            return redirect()->back()->with('error', 'Not enough balance');
-
+        if ($cart->transaction_id) {
+            return response()->json(['message' => 'Cart already has ongoing transaction'], 401);
         }
         
 
@@ -243,7 +246,10 @@ class CartController extends Controller
         $cart->transaction_id = $transaction->id;
         $cart->save();
 
-        return redirect()->route('dashboard.dashboard2');
+        $user->current_cart_id = null;
+        $user->save();
+
+        return response()->json(['message' => 'Checkout successful'], 200);
         
         // return response()->json($transaction);
     }

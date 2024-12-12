@@ -116,11 +116,10 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message === 'Cart updated') {
-                // Refresh the page to show updated quantity
-            } else {
+            if (data.message !== 'Cart updated') {
                 alert(data.message);
             }
+
             location.reload();
 
         })
@@ -197,6 +196,10 @@
             } else if (data.message === 'Checkout successful') {
                 alert('Checkout successful');
                 window.location.href = "{{ route('dashboard.dashboard2') }}";
+            } else if (data.message === 'Cart is empty') {
+                alert('Cart is empty');
+            } else if (data.message === 'Cart already has ongoing transaction') {
+                alert('Cart already has ongoing transaction');
             }
         })
         .catch(error => console.error('Error:', error));
