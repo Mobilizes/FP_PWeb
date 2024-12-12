@@ -29,69 +29,25 @@ $filteredTransactions = array_filter($transactions, function ($transaction) use 
 });
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .menu-btn {
-            background: white;
-            border: 2px solid #047857; 
-            color: black;
-            padding: 0.5rem;
-            border-radius: 0.375rem; 
-            transition: all 0.3s ease;
-        }
-        .menu-btn:hover {
-            background: #047857; 
-            color: white;
-        }
-        .menu-btn.active {
-            background: #047857; 
-            color: white;
-        }
-        .logout-btn {
-            background: #dc2626; 
-            color: white;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            transition: background 0.3s ease;
-        }
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
-    </style>
-</head>
-
-<body>
-
 <div>
-    <h2 class="text-2xl font-bold text-green-700 mb-4">Transactions</h2>
+    <h2 class="mb-4 text-2xl font-bold text-green-700">Transactions</h2>
 
     <div id="transactions-content">
         @foreach ($filteredTransactions as $index => $transaction)
-            <div class="transaction-card bg-gray-100 p-4 rounded mb-4 relative" data-index="{{ $index }}">
+            <div class="relative p-4 mb-4 bg-gray-100 rounded transaction-card" data-index="{{ $index }}">
                 <div class="absolute top-4 right-4">
                     <button 
-                        class="status-btn bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 relative"
-                        data-index="{{ $index }}">
+                        class="relative px-2 py-1 text-white bg-yellow-500 rounded status-btn hover:bg-yellow-600"
+                        data-index="{{ $index }}"
+                        data-status="{{ $transaction['status'] }}">
                         {{ ucfirst(htmlspecialchars($transaction['status'])) }}
                     </button>
-                    <div class="dropdown-menu hidden absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg">
-                        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-status="pending">Pending</button>
-                        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-status="onprogress">On Progress</button>
-                        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-status="finished">Finished</button>
-                        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-status="failed">Failed</button>
-                    </div>
                 </div>
                 <p class="text-sm text-gray-500">Tanggal Checkout: {{ htmlspecialchars($transaction['date']) }}</p>
                 <p class="text-sm text-gray-500">Toko: {{ htmlspecialchars($transaction['store']) }}</p>
-                <div class="products mt-2">
+                <div class="mt-2 products">
                     <p class="font-bold">Produk:</p>
-                    <ul class="list-none space-y-2">
+                    <ul class="space-y-2 list-none">
                         @foreach ($transaction['products'] as $product)
                             <li class="flex justify-between">
                                 <span>{{ htmlspecialchars($product['name']) }}</span>
@@ -100,7 +56,7 @@ $filteredTransactions = array_filter($transactions, function ($transaction) use 
                         @endforeach
                     </ul>
                 </div>
-                <p class="font-bold text-lg text-green-700 mt-4">
+                <p class="mt-4 text-lg font-bold text-green-700">
                     Total Harga: <span class="text-red-600">Rp {{ number_format($transaction['totalPrice'], 0, ',', '.') }}</span>
                 </p>
             </div>
@@ -108,30 +64,68 @@ $filteredTransactions = array_filter($transactions, function ($transaction) use 
     </div>
 </div>
 
+<!-- Modal -->
+<div id="status-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-full max-w-sm p-6 bg-white rounded shadow-lg">
+        <h3 class="mb-4 text-xl font-bold">Update Status</h3>
+        <div class="space-y-2">
+            <button data-status="pending" class="w-full py-2 text-white bg-yellow-500 rounded status-option hover:bg-yellow-600">Pending</button>
+            <button data-status="onprogress" class="w-full py-2 text-white bg-blue-500 rounded status-option hover:bg-blue-600">On Progress</button>
+            <button data-status="finished" class="w-full py-2 text-white bg-green-500 rounded status-option hover:bg-green-600">Finished</button>
+            <button data-status="failed" class="w-full py-2 text-white bg-red-500 rounded status-option hover:bg-red-600">Failed</button>
+        </div>
+        <div class="flex justify-end mt-4 space-x-2">
+            <button id="cancel-button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button id="save-button" class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Save</button>
+        </div>
+    </div>
+</div>
+
 <script>
+    let currentTransactionIndex = null;
+    const modal = document.getElementById('status-modal');
+    const saveButton = document.getElementById('save-button');
+    const cancelButton = document.getElementById('cancel-button');
+
+    const statusColors = {
+        pending: 'bg-yellow-500',
+        onprogress: 'bg-blue-500',
+        finished: 'bg-green-500',
+        failed: 'bg-red-500',
+    };
+
     document.querySelectorAll('.status-btn').forEach(button => {
+        const status = button.getAttribute('data-status');
+        button.classList.add(statusColors[status]);
+
         button.addEventListener('click', function(event) {
-            event.stopPropagation();
-            const dropdown = button.nextElementSibling;
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                if (menu !== dropdown) menu.classList.add('hidden');
-            });
-            dropdown.classList.toggle('hidden');
+            currentTransactionIndex = event.target.getAttribute('data-index');
+            modal.classList.remove('hidden');
         });
     });
 
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+    document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const selectedStatus = option.getAttribute('data-status');
+            saveButton.setAttribute('data-selected-status', selectedStatus);
+        });
     });
 
-    document.querySelectorAll('.dropdown-menu button').forEach(item => {
-        item.addEventListener('click', function() {
-            const status = item.getAttribute('data-status');
-            const button = item.closest('.transaction-card').querySelector('.status-btn');
-            button.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        });
+    cancelButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    saveButton.addEventListener('click', () => {
+        const selectedStatus = saveButton.getAttribute('data-selected-status');
+        if (currentTransactionIndex !== null && selectedStatus) {
+            const statusButton = document.querySelector(`.transaction-card[data-index="${currentTransactionIndex}"] .status-btn`);
+
+            // Update text and color
+            statusButton.textContent = selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1);
+            Object.values(statusColors).forEach(color => statusButton.classList.remove(color));
+            statusButton.classList.add(statusColors[selectedStatus]);
+
+            modal.classList.add('hidden');
+        }
     });
 </script>
-
-</body>
-</html>

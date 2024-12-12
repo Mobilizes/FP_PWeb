@@ -1,106 +1,131 @@
+@php
+$currentTransactionType = 'sale';
+$transactions = [
+    [
+        'type' => 'sale',
+        'date' => '2024-12-11',
+        'store' => 'Toko Bagus',
+        'status' => 'pending',
+        'totalPrice' => 175000,
+        'products' => [
+            ['name' => 'Produk A', 'quantity' => 2, 'price' => 25000],
+            ['name' => 'Produk B', 'quantity' => 1, 'price' => 75000],
+        ],
+    ],
+    [
+        'type' => 'sale',
+        'date' => '2023-01-20',
+        'store' => 'EcoStore',
+        'status' => 'completed',
+        'totalPrice' => 125000,
+        'products' => [
+            ['name' => 'Produk C', 'quantity' => 1, 'price' => 125000],
+        ],
+    ],
+];
+
+$filteredTransactions = array_filter($transactions, function ($transaction) use ($currentTransactionType) {
+    return isset($transaction['type']) && $transaction['type'] === $currentTransactionType;
+});
+@endphp
+
 <div>
-    <h2 class="text-2xl font-bold text-green-700 mb-4">Transactions</h2>
-    <div class="flex gap-4 mb-6">
-        <div>
-            <label for="sort-field" class="block text-sm font-medium text-gray-700">Sort By:</label>
-            <select id="sort-field" class="w-full rounded border-gray-300 shadow-sm">
-                <option value="date">Date</option>
-                <option value="totalPrice">Total Price</option>
-            </select>
-        </div>
-        <div>
-            <label for="sort-direction" class="block text-sm font-medium text-gray-700">Direction:</label>
-            <select id="sort-direction" class="w-full rounded border-gray-300 shadow-sm">
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-        </div>
-    </div>
+    <h2 class="mb-4 text-2xl font-bold text-green-700">Transactions</h2>
+
     <div id="transactions-content">
-        <!-- Content will load dynamically -->
-        <div class="transaction-card bg-gray-100 p-4 rounded mb-4 relative" data-index="0">
-            <div class="absolute top-4 right-4">
-                <button 
-                    class="status-btn bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" 
-                    onclick="showStatusModal('pending', 0)"
-                >
-                    Pending
-                </button>
+        @foreach ($filteredTransactions as $index => $transaction)
+            <div class="relative p-4 mb-4 bg-gray-100 rounded transaction-card" data-index="{{ $index }}">
+                <div class="absolute top-4 right-4">
+                    <button 
+                        class="relative px-2 py-1 text-white bg-yellow-500 rounded status-btn hover:bg-yellow-600"
+                        data-index="{{ $index }}"
+                        data-status="{{ $transaction['status'] }}">
+                        {{ ucfirst(htmlspecialchars($transaction['status'])) }}
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500">Tanggal Checkout: {{ htmlspecialchars($transaction['date']) }}</p>
+                <p class="text-sm text-gray-500">Toko: {{ htmlspecialchars($transaction['store']) }}</p>
+                <div class="mt-2 products">
+                    <p class="font-bold">Produk:</p>
+                    <ul class="space-y-2 list-none">
+                        @foreach ($transaction['products'] as $product)
+                            <li class="flex justify-between">
+                                <span>{{ htmlspecialchars($product['name']) }}</span>
+                                <span>{{ $product['quantity'] }} pcs x Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <p class="mt-4 text-lg font-bold text-green-700">
+                    Total Harga: <span class="text-red-600">Rp {{ number_format($transaction['totalPrice'], 0, ',', '.') }}</span>
+                </p>
             </div>
-            <p class="text-sm text-gray-500">Tanggal Checkout: 2024-12-11</p>
-            <p class="text-sm text-gray-500">Toko: Toko Bagus</p>
-            <div class="products mt-2">
-                <p class="font-bold">Produk:</p>
-                <ul class="list-none space-y-2">
-                    <li class="flex justify-between">
-                        <span>Produk A</span>
-                        <span>2 pcs x Rp 25,000</span>
-                    </li>
-                    <li class="flex justify-between">
-                        <span>Produk B</span>
-                        <span>1 pcs x Rp 75,000</span>
-                    </li>
-                </ul>
-            </div>
-            <p class="font-bold text-lg text-green-700 mt-4">Total Harga: <span class="text-red-600">Rp 175,000</span></p>
-        </div>
+        @endforeach
     </div>
 </div>
 
-<!-- Modal HTML -->
-<div id="status-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    <div class="bg-white p-6 rounded shadow-lg w-80">
-        <h3 class="text-lg font-bold mb-4">Pilih Status</h3>
-        <ul class="space-y-2">
-            <li><button class="w-full text-left px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="updateStatus('pending')">Pending</button></li>
-            <li><button class="w-full text-left px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="updateStatus('processing')">Processing</button></li>
-            <li><button class="w-full text-left px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="updateStatus('completed')">Completed</button></li>
-            <li><button class="w-full text-left px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="updateStatus('cancelled')">Cancelled</button></li>
-        </ul>
-        <button class="mt-4 w-full bg-red-500 text-white py-2 rounded hover:bg-red-600" onclick="closeModal()">Close</button>
+<!-- Modal -->
+<div id="status-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-full max-w-sm p-6 bg-white rounded shadow-lg">
+        <h3 class="mb-4 text-xl font-bold">Update Status</h3>
+        <div class="space-y-2">
+            <button data-status="pending" class="w-full py-2 text-white bg-yellow-500 rounded status-option hover:bg-yellow-600">Pending</button>
+            <button data-status="onprogress" class="w-full py-2 text-white bg-blue-500 rounded status-option hover:bg-blue-600">On Progress</button>
+            <button data-status="finished" class="w-full py-2 text-white bg-green-500 rounded status-option hover:bg-green-600">Finished</button>
+            <button data-status="failed" class="w-full py-2 text-white bg-red-500 rounded status-option hover:bg-red-600">Failed</button>
+        </div>
+        <div class="flex justify-end mt-4 space-x-2">
+            <button id="cancel-button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button id="save-button" class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Save</button>
+        </div>
     </div>
 </div>
 
 <script>
     let currentTransactionIndex = null;
+    const modal = document.getElementById('status-modal');
+    const saveButton = document.getElementById('save-button');
+    const cancelButton = document.getElementById('cancel-button');
 
-    function showStatusModal(currentStatus, index) {
-        console.log('Show modal for transaction index:', index); // Debug log
-        currentTransactionIndex = index; // Store the index of the transaction
-        const modal = document.getElementById('status-modal');
-        modal.classList.remove('hidden');
-        console.log('Modal is now visible'); // Debug log
-        document.getElementById('product-modal').classList.remove('hidden');
-    }
+    const statusColors = {
+        pending: 'bg-yellow-500',
+        onprogress: 'bg-blue-500',
+        finished: 'bg-green-500',
+        failed: 'bg-red-500',
+    };
 
-    function closeModal() {
-        const modal = document.getElementById('status-modal');
+    document.querySelectorAll('.status-btn').forEach(button => {
+        const status = button.getAttribute('data-status');
+        button.classList.add(statusColors[status]);
+
+        button.addEventListener('click', function(event) {
+            currentTransactionIndex = event.target.getAttribute('data-index');
+            modal.classList.remove('hidden');
+        });
+    });
+
+    document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const selectedStatus = option.getAttribute('data-status');
+            saveButton.setAttribute('data-selected-status', selectedStatus);
+        });
+    });
+
+    cancelButton.addEventListener('click', () => {
         modal.classList.add('hidden');
-        console.log('Modal is now hidden'); // Debug log
-    }
+    });
 
-    function updateStatus(newStatus) {
-        if (currentTransactionIndex !== null) {
-            const transactionCard = document.querySelector(`.transaction-card[data-index='${currentTransactionIndex}']`);
-            const statusButton = transactionCard.querySelector('.status-btn');
-            statusButton.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1); // Capitalize status
-            statusButton.className = `status-btn px-2 py-1 rounded text-white ${getStatusButtonColor(newStatus)}`;
-        }
-        closeModal();
-    }
+    saveButton.addEventListener('click', () => {
+        const selectedStatus = saveButton.getAttribute('data-selected-status');
+        if (currentTransactionIndex !== null && selectedStatus) {
+            const statusButton = document.querySelector(`.transaction-card[data-index="${currentTransactionIndex}"] .status-btn`);
 
-    function getStatusButtonColor(status) {
-        switch (status) {
-            case 'pending':
-                return 'bg-yellow-500 hover:bg-yellow-600';
-            case 'processing':
-                return 'bg-blue-500 hover:bg-blue-600';
-            case 'completed':
-                return 'bg-green-500 hover:bg-green-600';
-            case 'cancelled':
-                return 'bg-red-500 hover:bg-red-600';
-            default:
-                return 'bg-gray-500 hover:bg-gray-600';
+            // Update text and color
+            statusButton.textContent = selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1);
+            Object.values(statusColors).forEach(color => statusButton.classList.remove(color));
+            statusButton.classList.add(statusColors[selectedStatus]);
+
+            modal.classList.add('hidden');
         }
-    }
+    });
 </script>

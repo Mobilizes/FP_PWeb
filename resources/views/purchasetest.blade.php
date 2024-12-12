@@ -42,16 +42,16 @@ $transactions = [
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div class="container mx-auto p-4">
-    <h2 class="text-2xl font-bold text-green-700 mb-4">Transactions</h2>
+<div class="container p-4 mx-auto">
+    <h2 class="mb-4 text-2xl font-bold text-green-700">Transactions</h2>
 
     <div id="transactions-content">
         @foreach ($transactions as $index => $transaction)
-            <div class="transaction-card bg-gray-100 p-4 rounded mb-4 relative" data-index="{{ $index }}">
+            <div class="relative p-4 mb-4 bg-gray-100 rounded transaction-card" data-index="{{ $index }}">
                 <!-- Status Button -->
                 <div class="absolute top-4 right-4">
                     <button 
-                        class="status-btn text-white px-2 py-1 rounded relative"
+                        class="relative px-2 py-1 text-white rounded status-btn"
                         data-index="{{ $index }}"
                         data-status="{{ $transaction['status'] }}">
                         {{ ucfirst(htmlspecialchars($transaction['status'])) }}
@@ -63,13 +63,13 @@ $transactions = [
                 <p class="text-sm text-gray-500">Toko: {{ htmlspecialchars($transaction['store']) }}</p>
                 
                 <!-- Products -->
-                <div class="products mt-2">
+                <div class="mt-2 products">
                     <p class="font-bold">Produk:</p>
-                    <ul class="list-none space-y-2">
+                    <ul class="space-y-2 list-none">
                         @foreach ($transaction['products'] as $product)
                             <li class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ $product['image'] }}" alt="{{ htmlspecialchars($product['name']) }}" class="w-10 h-10 object-cover rounded">
+                                    <img src="{{ $product['image'] }}" alt="{{ htmlspecialchars($product['name']) }}" class="object-cover w-10 h-10 rounded">
                                     <span>{{ htmlspecialchars($product['name']) }}</span>
                                 </div>
                                 <span>{{ $product['quantity'] }} pcs x Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
@@ -79,7 +79,7 @@ $transactions = [
                 </div>
 
                 <!-- Total Price -->
-                <p class="font-bold text-lg text-green-700 mt-4">
+                <p class="mt-4 text-lg font-bold text-green-700">
                     Total Harga: <span class="text-red-600">Rp {{ number_format($transaction['totalPrice'], 0, ',', '.') }}</span>
                 </p>
             </div>
@@ -88,18 +88,18 @@ $transactions = [
 </div>
 
 <!-- Modal -->
-<div id="status-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-        <h3 class="text-xl font-bold mb-4">Update Status</h3>
+<div id="status-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-full max-w-sm p-6 bg-white rounded shadow-lg">
+        <h3 class="mb-4 text-xl font-bold">Update Status</h3>
         <div class="space-y-2">
-            <button data-status="pending" class="status-option w-full py-2 rounded bg-yellow-500 text-white hover:bg-yellow-600">Pending</button>
-            <button data-status="onprogress" class="status-option w-full py-2 rounded bg-blue-500 text-white hover:bg-blue-600">On Progress</button>
-            <button data-status="finished" class="status-option w-full py-2 rounded bg-green-500 text-white hover:bg-green-600">Finished</button>
-            <button data-status="failed" class="status-option w-full py-2 rounded bg-red-500 text-white hover:bg-red-600">Failed</button>
+            <button data-status="pending" class="w-full py-2 text-white bg-yellow-500 rounded status-option hover:bg-yellow-600">Pending</button>
+            <button data-status="onprogress" class="w-full py-2 text-white bg-blue-500 rounded status-option hover:bg-blue-600">On Progress</button>
+            <button data-status="finished" class="w-full py-2 text-white bg-green-500 rounded status-option hover:bg-green-600">Finished</button>
+            <button data-status="failed" class="w-full py-2 text-white bg-red-500 rounded status-option hover:bg-red-600">Failed</button>
         </div>
-        <div class="mt-4 flex justify-end space-x-2">
-            <button id="cancel-button" class="py-2 px-4 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-            <button id="save-button" class="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">Save</button>
+        <div class="flex justify-end mt-4 space-x-2">
+            <button id="cancel-button" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button id="save-button" class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Save</button>
         </div>
     </div>
 </div>

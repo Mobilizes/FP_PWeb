@@ -33,15 +33,8 @@
                 <x-application-logo class="h-10"/>
                 <p class='font-bold'> EcoSwap</p>
             </div>
-            {{-- <h1 class="text-xl font-bold">ecoswap Dashboard</h1> --}}
             <div class='flex flex-row items-center h-auto gap-5'>
                 <a href="{{ route('product') }}"> {{__("View Products")}}</a>
-                {{-- <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
-                        {{ __("Log out" )}}
-                    </button>
-                </form> --}}
             </div>
         </div>
     </header>
@@ -57,14 +50,11 @@
                 <div>
                     <p><strong> {{ Auth::User()->name}}</strong></p>
                     <p>{{ Auth::User()->email }}</p>
-                    {{-- TODO: MAKE RESPONSIVE --}}
-                    {{-- <p>Saldo : {{ \App\Http\Controllers\ProfileController::formatBalance(Auth::User()->balance) }}</p> --}}
                 </div>
             </div>
             <div class="flex flex-col gap-2">
                 <button class="menu-btn" data-target="profile"> {{ __("Profile") }}</button>
                 <button class="menu-btn" data-target="product-sale">{{ __("Product For Sale") }}</button>
-                {{-- <button class="menu-btn" data-target="product-buy"> {{ __("Product But")}} </button> --}}
                 <button class="menu-btn" data-target="sales-transactions">{{ __("Sales Transactions") }}</button>
                 <button class="menu-btn" data-target="purchase-transactions">{{ __("Purchase Transactions") }}</button>
                 <form method="POST" action="{{ route('logout') }}">
@@ -73,7 +63,6 @@
                         {{ __("Log out" )}}
                     </button>
                 </form>
-                {{-- <button class="logout-btn">Logout</button> --}}
             </div>
         </section>
 
@@ -100,8 +89,10 @@
 
         async function loadSection(url) {
             const response = await fetch(url);
-            mainContent.innerHTML = await response.text();
+            const html = await response.text();
             mainContent.innerHTML = html;
+
+            initializeModal();
         }
 
         const menuButtons = document.querySelectorAll('.menu-btn');
@@ -117,21 +108,56 @@
             });
         });
 
-        // function showModal(title, content = '') {
-        //     modalContent.innerHTML = `
-        //         <h3 class="mb-4 text-xl font-bold text-green-700">${title}</h3>
-        //         ${content}
-        //         <div class="flex justify-end gap-4 mt-4">
-        //             <button class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700" onclick="closeModal()">Cancel</button>
-        //             <button class="px-4 py-2 text-white bg-green-700 rounded hover:bg-green-800">Confirm</button>
-        //         </div>
-        //     `;
-        //     modalContainer.classList.remove('hidden');
-        // }
+        function initializeModal() {
+            let currentTransactionIndex = null;
+            const modal = document.getElementById('status-modal');
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
 
-        // function closeModal() {
-        //     modalContainer.classList.add('hidden');
-        // }
+            const statusColors = {
+                pending: 'bg-yellow-500',
+                onprogress: 'bg-blue-500',
+                finished: 'bg-green-500',
+                failed: 'bg-red-500',
+            };
+
+            document.querySelectorAll('.status-btn').forEach(button => {
+                const status = button.getAttribute('data-status');
+                button.classList.add(statusColors[status]);
+
+                button.addEventListener('click', function(event) {
+                    currentTransactionIndex = event.target.getAttribute('data-index');
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            document.querySelectorAll('.status-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const selectedStatus = option.getAttribute('data-status');
+                    saveButton.setAttribute('data-selected-status', selectedStatus);
+                });
+            });
+
+            cancelButton.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            saveButton.addEventListener('click', () => {
+                const selectedStatus = saveButton.getAttribute('data-selected-status');
+                if (currentTransactionIndex !== null && selectedStatus) {
+                    const statusButton = document.querySelector(`.transaction-card[data-index="${currentTransactionIndex}"] .status-btn`);
+
+                    // Update text and color
+                    statusButton.textContent = selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1);
+                    Object.values(statusColors).forEach(color => statusButton.classList.remove(color));
+                    statusButton.classList.add(statusColors[selectedStatus]);
+
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+
+        initializeModal();
     </script>
 </body>
 </html>
